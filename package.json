@@ -1,0 +1,20 @@
+{
+  "name": "end-to-end",
+  "version": "0.0.0",
+  "description": "E2E tests for the Cinema6 system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-as-promised": "^4.1.1",
+    "chai-webdriver": "^0.9.0",
+    "install": "^0.1.7",
+    "npm": "^1.4.15",
+    "q": "^1.0.1",
+    "selenium-webdriver": "^2.42.1"
+  }
+}
