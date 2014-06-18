@@ -1,12 +1,27 @@
 module.exports = function(browser) {
     var webdriver = require('selenium-webdriver');
 
+    var self = this;
+
     this.exp = null;
 
     Object.defineProperties(this, {
         id: {
             get: function() {
                 return 'c6embed-' + this.exp;
+            }
+        }
+    });
+
+    this.iframe = {
+        get: function() {
+            return browser.findElement({ css: this.selector });
+        }
+    };
+    Object.defineProperties(this.iframe, {
+        selector: {
+            get: function() {
+                return '#' + self.id + '>iframe';
             }
         }
     });
