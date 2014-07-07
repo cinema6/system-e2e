@@ -1,8 +1,12 @@
 module.exports = function(browser) {
     'use strict';
 
+    var webdriver = require('selenium-webdriver'),
+        utils = require('../../../../utils/utils');
+
     var Splash = require('../../modules/Splash'),
-        Article = require('./Article');
+        Article = require('./Article'),
+        Ballot = require('./Ballot');
 
     var splash = new Splash(browser),
         article = new Article(browser);
@@ -11,10 +15,9 @@ module.exports = function(browser) {
 
     function Source(source, href, card) {
         var self = this;
-
         this.text = source ? ('via ' + source) : null;
         this.href = href || null;
-        this.selector = '.mr-card__attributes';
+        this.selector = 'span.mr-card__attributes';
         this.link = {
             selector: 'a',
             get: function() {
@@ -26,79 +29,58 @@ module.exports = function(browser) {
                     });
             }
         };
-
-        this.get = function() {
-            var selector = this.selector;
-
-            return card.get()
-                .then(function(card) {
-                    return card.findElement({ css: selector });
-                });
-        };
+        this.get = utils.getMethod(card, this.selector);
     }
 
     function Title(text, card) {
         this.text = text || null;
-        this.selector = '.mr-card__title-h1';
-
-        this.get = function() {
-            var selector = this.selector;
-
-            return card.get()
-                .then(function(card) {
-                    return card.findElement({ css: selector });
-                });
-        };
+        this.selector = '.mr-card__title';
+        this.get = utils.getMethod(card, this.selector);
     }
 
-    function DropDown(card) {
-        this.selector = '.mr-card__title>button';
-
-        this.get = function() {
-            var selector = this.selector;
-
-            return card.get()
-                .then(function(card) {
-                    return card.findElement({ css: selector });
-                });
-        };
+    function PlayButton(card) {
+        this.selector = 'button.mr-player__play-btn';
+        this.get = utils.getMethod(card, this.selector);
+        this.click = utils.clickMethod(this, browser);
     }
-    DropDown.prototype = {
-        hover: function() {
+
+    function Player(card) {
+        this.selector = '.mr-player__group,iframe';
+        this.get = utils.getMethod(card, this.selector);
+        this.click = utils.mouseClickMethod(this, browser);
+    }
+    Player.prototype = {
+        skipToEnd: function() {
             return this.get()
-                .then(function(button) {
-                    return browser.actions()
-                        .mouseMove(button)
-                        .perform();
+                .then(function(element) {
+                    return element.sendKeys(webdriver.Key.END);
                 })
                 .then(function() {
-                    return browser.sleep(1500);
-                });
-        },
-        leave: function() {
-            return this.get()
-                .then(function(button) {
-                    return browser.actions()
-                        .mouseMove(button, {
-                            x: -25,
-                            y: -25
-                        })
-                        .perform();
-                })
-                .then(function() {
-                    return browser.sleep(1500);
+                    return browser.sleep(2000);
                 });
         }
-    };
+    }
 
-    function Card(title, source) {
+    function Card(title, source, index) {
         this.title = new Title(title, this);
-        this.dropDown = new DropDown(this);
+        this.playButton = new PlayButton(this);
+        this.player = new Player(this);
+        this.ballot = new Ballot(browser, this);
         this.source = source ? new Source(source.source, source.href, this) : null;
+        this.index = index;
     }
     Card.prototype = {
         get: function() {
             return self.getCard(self.cards.indexOf(this));
+        }
+    };
+
+    function AdCard() {
+
+    }
+    AdCard.prototype = {
+        get: function() {
+            return self.getAdCard();
         }
     };
 
@@ -108,26 +90,42 @@ module.exports = function(browser) {
         new Card('Sergio Flores', {
             source: 'YouTube',
             href: 'https://www.youtube.com/watch?v=GaoLU6zKaws'
-        }),
-        new Card(),
+        },0),
+        new AdCard(),
         new Card('Epic Sax Guy', {
             source: 'YouTube',
             href: 'https://www.youtube.com/watch?v=gy1B3agGNxw'
-        }),
-        new Card(),
+        },1),
+        new AdCard(),
         new Card('Sunstroke Project', {
             source: 'YouTube',
             href: 'https://www.youtube.com/watch?v=UQBc2RcbTHo'
-        }),
-        new Card()
+        },2),
+        new Card(null,null,3)
     ];
 
-    this.getCard = function(index) {
+    this.isAdCard = function (card){
+        return (card instanceof AdCard);
+    }
+
+    this.getCard = function(cardNum) {
+        var card = this.cards[cardNum];
+        if (this.isAdCard(card)){
+            return this.getAdCard();
+         } else {
+             return browser.findElements({ css: 'ul.mr-cards__list>li' })
+                 .then(function(lis) {
+                     return lis[card.index];
+                 });
+        }
+    };
+
+    this.getAdCard = function() {
         return browser.findElements({ css: 'ul.mr-cards__list>li' })
             .then(function(lis) {
-                return lis[index];
+                return lis[4];
             });
-    };
+    }
 
     this.get = function() {
         splash.get();
