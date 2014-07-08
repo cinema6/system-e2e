@@ -2,7 +2,8 @@
     'use strict';
 
     var browser = require('../browser'),
-        expect = require('chai').expect;
+        expect = require('chai').expect,
+        chain = require('../../../utils/promise').chain;
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -28,7 +29,6 @@
             },
             function() {
                 card = mrPlayer.cards[4];
-
                 paginator.skipTo(3);
                 return paginator.skipTo(2);
             }
@@ -37,7 +37,7 @@
                 beforeEach(fn);
 
                 describe('the title', function() {
-                    it('should not be shown', function() {
+                    it('should be shown', function() {
                         return card.title.get()
                             .then(function(title) {
                                 return expect(title.isDisplayed()).to.eventually.equal(true);
@@ -45,52 +45,58 @@
                     });
                 });
 
+                describe('the play button', function() {
+                    it('should be shown initially', function() {
+                        return card.playButton.get()
+                            .then(function(element) {
+                                return expect(element.isDisplayed()).to.eventually.equal(true);
+                            });
+                    });
+ 
+                    describe('when it is clicked', function() {
+                        beforeEach(function() {
+                            return card.playButton.click();
+                        });
+ 
+                        it('should disappear', function() {
+                            return card.playButton.get()
+                                .then(function(element){
+                                    return expect(element.isDisplayed()).to.eventually.equal(false);
+                                });
+                        });
+ 
+                        it('should reappear when the playing video is clicked', function() {
+                            return card.player.click()
+                                .then(function() {
+                                    return card.playButton.get();
+                                })
+                                .then(function(element) {
+                                     return expect(element.isDisplayed()).to.eventually.equal(true);
+                                });
+                        });
+                    });
+                });
+
                 describe('the source', function() {
-                    it('should not be shown initially', function() {
+                    it('should be shown', function() {
                         return card.source.get()
                             .then(function(source) {
-                                return expect(source.isDisplayed()).to.eventually.equal(false);
+                                return expect(source.isDisplayed()).to.eventually.equal(true);
                             });
                     });
 
                     it('should link to the video', function() {
                         return card.source.link.get()
                             .then(function(link) {
-                                expect(link.getAttribute('href')).to.eventually.equal(card.source.href);
+                                return expect(link.getAttribute('href')).to.eventually.equal(card.source.href);
                             });
                     });
 
-                    describe('when the drop-down button is hovered over', function() {
-                        beforeEach(function() {
-                            return card.dropDown.hover();
-                        });
-
-                        it('should show the source', function() {
-                            return card.source.get()
-                                .then(function(source) {
-                                    return expect(source.isDisplayed()).to.eventually.equal(true);
-                                });
-                        });
-
-                        it('should have the correct text', function() {
-                            return card.source.get()
-                                .then(function(source) {
-                                    expect(source.getText()).to.eventually.equal(card.source.text);
-                                });
-                        });
-
-                        describe('when the drop-down button is not hovered over', function() {
-                            beforeEach(function() {
-                                return card.dropDown.leave();
+                    it('should have the correct text', function() {
+                        return card.source.get()
+                            .then(function(source) {
+                                return expect(source.getText()).to.eventually.equal(card.source.text);
                             });
-
-                            it('should hide the source', function() {
-                                return card.source.get()
-                                    .then(function(source) {
-                                        return expect(source.isDisplayed()).to.eventually.equal(false);
-                                    });
-                            });
-                        });
                     });
                 });
             });

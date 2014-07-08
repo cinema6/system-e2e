@@ -19,7 +19,7 @@
     splash.exp = article.exp;
 
     describe('MiniReel Player [light]: Paginator', function() {
-        this.timeout(30000);
+        this.timeout(60000);
 
         beforeEach(function() {
             article.get();
@@ -34,7 +34,12 @@
                             .then(function(card) {
                                 return expect(card.isDisplayed()).to.eventually.equal(true);
                             })
-                            .then(function next() {
+                            .then(function() {
+                                if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                    return browser.sleep(8000);
+                                }
+                            })
+                            .then(function() {
                                 return paginator.next();
                             });
                     };
@@ -44,15 +49,23 @@
 
         describe('going to the previous card', function() {
             beforeEach(function() {
-                return chain([0, 1, 2, 3, 4].map(function() {
+                return chain([0, 1, 2, 3, 4, 5].map(function(index) {
                     return function() {
-                        return paginator.next();
+                        return mrPlayer.getCard(index)
+                            .then(function() {
+                                if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                    return browser.sleep(7000);
+                                }
+                            })
+                            .then(function() {
+                                return paginator.next();
+                            });
                     };
                 }));
             });
 
             it('should show each card', function() {
-                return chain([4, 3, 2, 1, 0].map(function(index) {
+                return chain([4, 2, 0].map(function(index) {
                     return function() {
                         return paginator.prev()
                             .then(function() {

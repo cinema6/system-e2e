@@ -42,7 +42,10 @@ module.exports = function(browser) {
 
         return browser.findElement({ id: id })
             .then(function click(element) {
-                element.click();
+                browser.actions()
+                    .mouseDown(element)
+                    .mouseUp()
+                    .perform();
                 return webdriver.promise.fulfilled(element);
             })
             .then(function waitForIframe(element) {
@@ -54,4 +57,5 @@ module.exports = function(browser) {
                 });
             });
     };
+
 };
