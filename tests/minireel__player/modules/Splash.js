@@ -6,7 +6,7 @@ module.exports = function(browser) {
     this.exp = null;
 
     Object.defineProperties(this, {
-        id: {
+        className: {
             get: function() {
                 return 'c6embed-' + this.exp;
             }
@@ -21,16 +21,16 @@ module.exports = function(browser) {
     Object.defineProperties(this.iframe, {
         selector: {
             get: function() {
-                return '#' + self.id + '>iframe';
+                return '.' + self.className + '>iframe';
             }
         }
     });
 
     this.get = function() {
-        var id = this.id;
+        var className = this.className;
 
         return browser.wait(function() {
-            return browser.findElement({ id: id })
+            return browser.findElement({ css: '.' + className })
                 .then(function(element) {
                     return element.isDisplayed();
                 });
@@ -38,9 +38,9 @@ module.exports = function(browser) {
     };
 
     this.click = function() {
-        var id = this.id;
+        var className = this.className;
 
-        return browser.findElement({ id: id })
+        return browser.findElement({ css: '.' + className })
             .then(function click(element) {
                 browser.actions()
                     .mouseDown(element)

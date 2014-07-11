@@ -130,7 +130,7 @@ module.exports = function(browser) {
     this.get = function() {
         splash.get();
         splash.click();
-        return browser.findElement({ id: splash.id })
+        return browser.findElement({ css: '.' + splash.className })
             .then(function(element) {
                 return element.findElement({ tagName: 'iframe' });
             })
