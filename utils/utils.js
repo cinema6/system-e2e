@@ -13,10 +13,7 @@
     exports.clickMethod = function(element, browser, sleepTime) {
         var sleepTime = sleepTime || 1500;
         return function() {
-//            return browser.sleep(sleepTime)
-//                .then(function() {
-                    return element.get()
-//                }) 
+            return element.get()
                 .then(function(e) {
                     return e.click();
                 })
@@ -29,10 +26,7 @@
     exports.mouseClickMethod = function(element, browser, sleepTime) {
         var sleepTime = sleepTime || 1500;
         return function() {
-//            return browser.sleep(sleepTime)
-//                .then(function() {
-                    return element.get()
-//                }) 
+            return element.get()
                 .then(function(e) {
                     return browser.actions()
                         .mouseDown(e)

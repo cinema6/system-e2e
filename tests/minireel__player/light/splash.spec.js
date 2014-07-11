@@ -24,13 +24,13 @@
         });
 
         it('should be displayed', function() {
-            return expect('#' + splash.id).dom.to.be.visible();
+            return expect('.' + splash.className).dom.to.be.visible();
         });
 
         it('should preload the iframe', function() {
             return Q.all([
-                expect(browser.findElement({ id: splash.id }).isElementPresent({ tagName: 'iframe' })).to.eventually.equal(true),
-                expect('#' + splash.id + ' iframe').dom.not.to.be.visible()
+                expect(browser.findElement({ className: splash.className }).isElementPresent({ tagName: 'iframe' })).to.eventually.equal(true),
+                expect('.' + splash.className + ' iframe').dom.not.to.be.visible()
             ]);
         });
 
@@ -40,7 +40,7 @@
             });
 
             it('should show the iframe', function() {
-                return expect('#' + splash.id + ' iframe').dom.to.be.visible();
+                return expect('.' + splash.className + ' iframe').dom.to.be.visible();
             });
         });
     });
