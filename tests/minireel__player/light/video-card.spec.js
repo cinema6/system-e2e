@@ -3,7 +3,8 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        config = require('../../config');
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -16,16 +17,16 @@
     describe('MiniReel Player [light]: Video Card', function() {
         var card;
 
-        this.timeout(30000);
-
         beforeEach(function() {
-            article.get();
-            return mrPlayer.get();
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
+                });
         });
 
         [
             function() {
-                card = mrPlayer.cards[0];
+                return card = mrPlayer.cards[0];
             },
             function() {
                 card = mrPlayer.cards[4];

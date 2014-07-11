@@ -3,7 +3,8 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        config = require('../../config');
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -17,11 +18,11 @@
         var card;
         var ballot;
 
-        this.timeout(60000);
-
         beforeEach(function() {
-            article.get();
-            return mrPlayer.get()
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
+                })
                 .then(function() {
                     card = mrPlayer.cards[0];
                     ballot = card.ballot;
@@ -56,22 +57,21 @@
                 return card.player.click();
             });
 
-            it('should show the ballot vote-module', function() {
+            it('should show the ballot vote-module and its controls', function() {
                 return ballot.vote.get()
                     .then(function(element) {
                         return expect(element.isDisplayed()).to.eventually.equal(true);
+                    })
+                    .then(function() {
+                        return chain(ballot.vote.controls.map(function(control) {
+                            return function() {
+                                return control.get()
+                                    .then(function(element){
+                                        return expect(element.isDisplayed()).to.eventually.equal(true);
+                                    });
+                            };
+                        }));
                     });
-            });
-
-            it('should show the ballot vote-module controls', function() {
-                return chain(ballot.vote.controls.map(function(control) {
-                    return function() {
-                        return control.get()
-                            .then(function(element){
-                                return expect(element.isDisplayed()).to.eventually.equal(true);
-                            });
-                    };
-                }));
             });
 
             describe('when the close button is clicked', function() {
@@ -95,7 +95,7 @@
                     return ballot.vote.click();
                 });
 
-                it('should hide the ballot vote-module', function() {
+                it('should hide the ballot vote-module when the overlay is clicked', function() {
                     return ballot.vote.get()
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(false);
@@ -140,40 +140,38 @@
                     return ballot.vote.voteButton.click();
                 });
 
-                it('should hide the ballot vote-module', function() {
+                it('should hide the ballot vote-module and its controls', function() {
                     return ballot.vote.get()
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(false);
+                        })
+                        .then(function() {
+                            return chain(ballot.vote.controls.map(function(control) {
+                                return function() {
+                                    return control.get()
+                                        .then(function(element){
+                                            return expect(element.isDisplayed()).to.eventually.equal(false);
+                                        });
+                                };
+                            }));
                         });
                 });
 
-                it('should hide the ballot vote-module controls', function() {
-                    return chain(ballot.vote.controls.map(function(control) {
-                        return function() {
-                            return control.get()
-                                .then(function(element){
-                                    return expect(element.isDisplayed()).to.eventually.equal(false);
-                                });
-                        };
-                    }));
-                });
-
-                it('should show the ballot results-module', function() {
+                it('should show the ballot results-module and its controls', function() {
                     return ballot.results.get()
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);
+                        })
+                        .then(function() {
+                            return chain(ballot.results.controls.map(function(control) {
+                                return function() {
+                                    return control.get()
+                                       .then(function(element){
+                                            return expect(element.isDisplayed()).to.eventually.equal(true);
+                                        });
+                                };
+                            }));
                         });
-                });
-
-                it('should show the ballot results-module controls', function() {
-                    return chain(ballot.results.controls.map(function(control) {
-                        return function() {
-                            return control.get()
-                               .then(function(element){
-                                    return expect(element.isDisplayed()).to.eventually.equal(true);
-                                });
-                        };
-                    }));
                 });
 
                 it('should have valid percentage values for the tallies', function() {
@@ -207,7 +205,7 @@
 
                     describe('when the ballot reappears', function() {
                         beforeEach(function() {
-                            card.playButton.click()
+                            return card.playButton.click()
                                 .then(function() {
                                     return card.player.click();
                                 });
@@ -225,7 +223,7 @@
                                 .then(function(element) {
                                     return expect(element.isDisplayed()).to.eventually.equal(true);
                                 });
-                            });
+                        });
 
                     });
 
@@ -266,3 +264,4 @@
         });
     });
 }());
+

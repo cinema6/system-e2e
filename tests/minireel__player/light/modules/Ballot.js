@@ -24,7 +24,7 @@ module.exports = function Ballot(browser, card) {
     function VoteButton(vote) {
         this.selector = 'button.mr-ballot__btn0';
         this.get = utils.getMethod(vote, this.selector);
-        this.click = utils.clickMethod(this, browser);
+        this.click = utils.clickMethod(this, browser);//, 3000);
     }
 
     function VoteCloseButton(vote) {

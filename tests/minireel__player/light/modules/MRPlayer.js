@@ -34,7 +34,7 @@ module.exports = function(browser) {
 
     function Title(text, card) {
         this.text = text || null;
-        this.selector = '.mr-card__title';
+        this.selector = 'h1.mr-card__title';
         this.get = utils.getMethod(card, this.selector);
     }
 

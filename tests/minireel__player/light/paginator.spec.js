@@ -4,7 +4,8 @@
     var browser = require('../browser'),
         expect = require('chai').expect,
         Q = require('q'),
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        config = require('../../config');
 
     var Article = require('./modules/Article'),
         Paginator = require('./modules/Paginator'),
@@ -19,11 +20,12 @@
     splash.exp = article.exp;
 
     describe('MiniReel Player [light]: Paginator', function() {
-        this.timeout(60000);
 
         beforeEach(function() {
-            article.get();
-            return paginator.get();
+            return article.get()
+                .then(function() {
+                    return paginator.get();
+                });
         });
 
         describe('going to the next card', function() {
@@ -115,8 +117,10 @@
 
         describe('exiting the MiniReel', function() {
             beforeEach(function() {
-                paginator.prev();
-                return browser.switchTo().defaultContent();
+                return paginator.prev()
+                    .then(function() {
+                        return browser.switchTo().defaultContent();
+                    });
             });
 
             it('should hide the iframe', function() {

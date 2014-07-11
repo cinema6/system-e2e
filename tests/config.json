@@ -15,14 +15,34 @@
         "server": {
             "address": "http://hub.browserstack.com/wd/hub"
         },
-        "capabilities": {
-            "browserName" : "firefox",
-            "browser_version" : "30.0",
-            "os" : "Windows",
-            "os_version" : "8.1",
-            "resolution" : "1024x768",
-            "browserstack.user" : "USER",
-            "browserstack.key" : "KEY"
-        }
+        "browsers": [
+            {
+                "browser": "Chrome",
+                "browser_version": "35.0",
+                "os": "Windows",
+                "os_version": "8.1",
+                "resolution": "1024x768",
+                "browserstack.user": "scottbouloutian1",
+                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
+            },
+            {
+                "browserName": "firefox",
+                "browser_version": "30.0",
+                "os": "Windows",
+                "os_version": "8.1",
+                "resolution": "1024x768",
+                "browserstack.user": "scottbouloutian1",
+                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
+            },
+            {
+                "browser": "IE",
+                "browser_version": "11.0",
+                "os": "Windows",
+                "os_version": "8.1",
+                "resolution": "1024x768",
+                "browserstack.user": "scottbouloutian1",
+                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
+            }
+        ]
     }
 }
