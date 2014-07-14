@@ -1,5 +1,4 @@
 {
-    "runLocally": true,
     "localOptions": {
         "server": {
             "jar": "./tests/selenium-server-standalone-2.42.2.jar",
@@ -15,34 +14,23 @@
         "server": {
             "address": "http://hub.browserstack.com/wd/hub"
         },
-        "browsers": [
-            {
-                "browser": "Chrome",
-                "browser_version": "35.0",
-                "os": "Windows",
-                "os_version": "8.1",
-                "resolution": "1024x768",
-                "browserstack.user": "scottbouloutian1",
-                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
-            },
-            {
-                "browserName": "firefox",
-                "browser_version": "30.0",
-                "os": "Windows",
-                "os_version": "8.1",
-                "resolution": "1024x768",
-                "browserstack.user": "scottbouloutian1",
-                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
-            },
-            {
-                "browser": "IE",
-                "browser_version": "11.0",
-                "os": "Windows",
-                "os_version": "8.1",
-                "resolution": "1024x768",
-                "browserstack.user": "scottbouloutian1",
-                "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
-            }
-        ]
+        "chrome": {
+            "browser": "Chrome",
+            "browser_version": "35.0",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768",
+            "browserstack.user": "scottbouloutian1",
+            "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
+        },
+        "firefox": {
+            "browserName": "firefox",
+            "browser_version": "30.0",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768",
+            "browserstack.user": "scottbouloutian1",
+            "browserstack.key": "dXDGXYf6xzzbDytHrWp8"
+        }
     }
 }

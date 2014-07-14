@@ -4,8 +4,9 @@
     var config = require('../config');
 
     var browser;
+    var runLocally = process.env.RUN_LOCALLY || 'true';
 
-    if(config.runLocally){
+    if(runLocally === 'true'){
         var webdriver = require('selenium-webdriver');
         var SeleniumServer = require('selenium-webdriver/remote').SeleniumServer;
         var server = new SeleniumServer(config.localOptions.server.jar, config.localOptions.server.options);
@@ -16,10 +17,10 @@
             .build();
     }else{
         var webdriver = require('browserstack-webdriver');
-        var browserIndex = process.env.BROWSER_INDEX || 0;
+        var browserName = process.env.BROWSER_NAME || 'firefox';
         browser = module.exports = new webdriver.Builder()
             .usingServer(config.browserStackOptions.server.address)
-            .withCapabilities(config.browserStackOptions.browsers[browserIndex])
+            .withCapabilities(config.browserStackOptions[browserName])
             .build();
     }
 
