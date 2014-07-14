@@ -21,8 +21,8 @@
 
         // Add credentials to the capabilities
         var capabilities = config.browserStackOptions[browserName];
-        capabilities.browserstack.user = process.env.BROWSERSTACK_USER;
-        capabilities.browserstack.key = process.env.BROWSERSTACK_KEY;
+        capabilities['browserstack.user'] = process.env.BROWSERSTACK_USER;
+        capabilities['browserstack.key'] = process.env.BROWSERSTACK_KEY;
 
         browser = module.exports = new webdriver.Builder()
             .usingServer(config.browserStackOptions.server.address)
