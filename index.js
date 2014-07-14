@@ -32,6 +32,9 @@ browserList.forEach(function(browserName) {
 browserList.forEach(function(browserName) {
     console.log(browserName.toUpperCase() + ': Starting Tests');
     exec("RUN_LOCALLY=false BROWSER_NAME=" + browserName + " mocha tests --recursive", function(error, stdout, stderr) {
+    	console.log(error);
+    	console.log(stdout);
+    	console.log(stderr);
         console.log(browserName.toUpperCase() + ': Done Tests');
     });
 });
