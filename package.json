@@ -1,6 +1,6 @@
 {
   "name": "end-to-end",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "E2E tests for the Cinema6 system.",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,9 @@
     "npm": "^1.4.15",
     "q": "^1.0.1",
     "selenium-webdriver": "^2.42.1",
-    "browserstack-webdriver": "^2.41.1"
+    "browserstack-webdriver": "^2.41.1",
+    "selenium-runner": "^0.2.0",
+    "browserstack": "^1.0.1",
+    "madlib-promise-queue": "^0.1.2"
   }
 }
