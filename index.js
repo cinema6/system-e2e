@@ -13,12 +13,6 @@ var BrowserStack = require( "browserstack" ),
     chain = require('./utils/promise').chain,
     config = require('./test/config');
 
-// Make sure the reporting directory exists, and if not, create it
-fs.mkdir('./reports/', function(error) {
-    console.error('ERROR:', 'cannot create reports directory');
-    process.exit(1);
-});
-
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({
     username: process.env.BROWSERSTACK_USER,
