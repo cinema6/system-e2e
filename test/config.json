@@ -1,0 +1,61 @@
+{
+    "localOptions": {
+        "server": {
+            "jar": "./test/selenium-server-standalone-2.42.2.jar",
+            "options": {
+                "port": "4444"
+            }
+        },
+        "capabilities": {
+            "browserName": "firefox"
+        }
+    },
+    "browserStackOptions": {
+        "server": {
+            "address": "http://hub.browserstack.com/wd/hub"
+        },
+        "explorer": {
+            "browser": "IE",
+            "browser_version": "11.0",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768"
+        },
+        "firefox": {
+            "browserName": "firefox",
+            "browser_version": "30.0",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768"
+        },
+        "safari": {
+            "browserName": "Safari",
+            "browser_version": "5.1",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768"
+        },
+        "chrome": {
+            "browser": "Chrome",
+            "browser_version": "35.0",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768"
+        },
+        "opera": {
+            "browser": "Opera",
+            "browser_version": "12.16",
+            "os": "Windows",
+            "os_version": "8.1",
+            "resolution": "1024x768"
+        },
+        "iphone": {
+            "browserName": "iPhone",
+            "device": "iPhone 5C"
+        },
+        "android": {
+            "browserName": "android",
+            "device": "Google Nexus 5"
+        }
+    }
+}
