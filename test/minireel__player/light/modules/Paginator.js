@@ -6,19 +6,19 @@ module.exports = function(browser) {
     var mrPlayer = new MRPlayer(browser);
 
     this.nextButton = {
-        selector: 'button.mr-pager__next',
+        selector: 'button.pager__next',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
     };
     this.prevButton = {
-        selector: 'button.mr-pager__prev',
+        selector: 'button.pager__prev',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
     };
     this.thumbs = {
-        selector: '.mr-pages__list button',
+        selector: '.pages__list button',
         get: function() {
             return browser.findElements({ css: this.selector });
         }

@@ -17,7 +17,7 @@ module.exports = function(browser) {
         var self = this;
         this.text = source ? ('via ' + source) : null;
         this.href = href || null;
-        this.selector = 'span.mr-card__attributes';
+        this.selector = 'span.card__attributes';
         this.link = {
             selector: 'a',
             get: function() {
@@ -34,18 +34,18 @@ module.exports = function(browser) {
 
     function Title(text, card) {
         this.text = text || null;
-        this.selector = 'h1.mr-card__title';
+        this.selector = 'h1.card__title';
         this.get = utils.getMethod(card, this.selector);
     }
 
     function PlayButton(card) {
-        this.selector = 'button.mr-player__play-btn';
+        this.selector = 'button.player__play-btn';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.clickMethod(this, browser);
     }
 
     function Player(card) {
-        this.selector = '.mr-player__group,iframe';
+        this.selector = '.player__group,iframe';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser);
     }
@@ -113,7 +113,7 @@ module.exports = function(browser) {
         if (this.isAdCard(card)){
             return this.getAdCard();
          } else {
-             return browser.findElements({ css: 'ul.mr-cards__list>li' })
+             return browser.findElements({ css: 'ul.slides__list>li' })
                  .then(function(lis) {
                      return lis[card.index];
                  });
@@ -121,7 +121,7 @@ module.exports = function(browser) {
     };
 
     this.getAdCard = function() {
-        return browser.findElements({ css: 'ul.mr-cards__list>li' })
+        return browser.findElements({ css: 'ul.slides__list>li' })
             .then(function(lis) {
                 return lis[4];
             });
