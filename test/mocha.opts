@@ -1,2 +1,2 @@
 --reporter mocha-jenkins-reporter
--t 360000
+-t 600000
