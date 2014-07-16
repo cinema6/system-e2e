@@ -4,8 +4,7 @@
     var browser = require('../browser'),
         expect = require('chai').expect,
         Q = require('q'),
-        chain = require('../../../utils/promise').chain,
-        config = require('../../config');
+        chain = require('../../../utils/promise').chain;
 
     var Article = require('./modules/Article'),
         Paginator = require('./modules/Paginator'),
@@ -28,7 +27,7 @@
                 });
         });
 
-        describe('going to the next card', function() {
+        describe.only('going to the next card', function() {
             it('should show each card', function() {
                 return chain([0, 1, 2, 3, 4, 5].map(function(index) {
                     return function() {

@@ -11,7 +11,7 @@ var BrowserStack = require( "browserstack" ),
     Q = require('q'),
     Queue = require('madlib-promise-queue'),
     chain = require('./utils/promise').chain,
-    config = require('./test/config');
+    config = require('./config');
 
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({
