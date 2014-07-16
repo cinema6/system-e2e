@@ -30,7 +30,10 @@
         capabilities = config.browserStackOptions[browserName];
         capabilities['browserstack.user'] = process.env.BROWSERSTACK_USER;
         capabilities['browserstack.key'] = process.env.BROWSERSTACK_KEY;
-
+        if(process.env.BROWSERSTACK_DEBUG) {
+            capabilities['browserstack.debug'] = true;
+        }
+        
         serverAddress = config.browserStackOptions.server.address;
         webdriver = require('browserstack-webdriver');
     }

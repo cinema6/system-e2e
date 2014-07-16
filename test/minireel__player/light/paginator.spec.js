@@ -27,7 +27,7 @@
                 });
         });
 
-        describe.only('going to the next card', function() {
+        describe('going to the next card', function() {
             it('should show each card', function() {
                 return chain([0, 1, 2, 3, 4, 5].map(function(index) {
                     return function() {

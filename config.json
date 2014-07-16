@@ -19,8 +19,7 @@
             "browser_version": "11.0",
             "os": "Windows",
             "os_version": "8.1",
-            "resolution": "1024x768",
-            "browserstack.debug": true
+            "resolution": "1024x768"
         },
         "firefox": {
             "browserName": "firefox",
