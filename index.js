@@ -94,6 +94,7 @@ function runTestsForBrowser(browserName) {
             BROWSER_NAME: browserName,
             BROWSERSTACK_USER: process.env.BROWSERSTACK_USER,
             BROWSERSTACK_KEY: process.env.BROWSERSTACK_KEY,
+            BROWSERSTACK_DEBUG: process.env.BROWSERSTACK_DEBUG,
             JUNIT_REPORT_PATH: ('./reports/' + browserName + '_report.xml')
         }
     };
