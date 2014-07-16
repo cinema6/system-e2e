@@ -17,8 +17,9 @@
 * Set up the following environment variables described below
 * Run the tests: ```node index```
 
-| Variable          | Description               | Default                   |
-| ----------------- | ------------------------- | -----------------------   |
-| BROWSERSTACK_USER | BrowserStack user id      | null                      |
-| BROWSERSTACK_KEY  | BrowserStack api key      | null                      |
-| BROWSERS          | The browsers to test on   | firefox, chrome, explorer |
+| Variable           | Description                 | Default                   |
+| -----------------  | -------------------------   | -----------------------   |
+| BROWSERSTACK_USER  | BrowserStack user id        | null                      |
+| BROWSERSTACK_KEY   | BrowserStack api key        | null                      |
+| BROWSERSTACK_DEBUG | Enables snapshots           | false                     |
+| BROWSERS           | The browsers to test on     | firefox, chrome, explorer |
