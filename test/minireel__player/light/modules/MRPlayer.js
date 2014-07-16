@@ -47,18 +47,7 @@ module.exports = function(browser) {
     function Player(card) {
         this.selector = '.player__group,iframe';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.mouseClickMethod(this, browser);
-    }
-    Player.prototype = {
-        skipToEnd: function() {
-            return this.get()
-                .then(function(element) {
-                    return element.sendKeys(webdriver.Key.END);
-                })
-                .then(function() {
-                    return browser.sleep(2000);
-                });
-        }
+        this.click = utils.mouseClickMethod(this, browser, 3000);
     }
 
     function Card(title, source, index) {

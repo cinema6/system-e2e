@@ -17,9 +17,17 @@
         var card;
 
         beforeEach(function() {
-            return article.get()
-                .then(function() {
-                    return mrPlayer.get();
+            var promise = function () {
+                return article.get()
+                    .then(function() {
+                        return mrPlayer.get();
+                    });
+            }
+            return promise()
+                .thenCatch(function(error) {
+                    if(error) {
+                        return promise();
+                    }
                 });
         });
 

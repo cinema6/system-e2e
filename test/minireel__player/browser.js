@@ -21,7 +21,7 @@
 
         capabilities = config.localOptions.capabilities;
         browserName = capabilities.browserName;
-        serverAddress = server.serverAddress
+        serverAddress = server.serverAddress;
         webdriver = require('selenium-webdriver');
     }else{
         browserName = process.env.BROWSER_NAME || 'firefox';
@@ -30,10 +30,10 @@
         capabilities = config.browserStackOptions[browserName];
         capabilities['browserstack.user'] = process.env.BROWSERSTACK_USER;
         capabilities['browserstack.key'] = process.env.BROWSERSTACK_KEY;
-        if(process.env.BROWSERSTACK_DEBUG) {
+        if(process.env.BROWSERSTACK_DEBUG === 'true') {
             capabilities['browserstack.debug'] = true;
         }
-        
+
         serverAddress = config.browserStackOptions.server.address;
         webdriver = require('browserstack-webdriver');
     }

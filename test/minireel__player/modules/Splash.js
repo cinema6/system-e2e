@@ -54,7 +54,7 @@ module.exports = function(browser) {
                         .then(function(iframe) {
                             return iframe.isDisplayed();
                         });
-                });
+                }, 10000);
             });
     };
 

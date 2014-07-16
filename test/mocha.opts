@@ -1,2 +1,2 @@
 --reporter mocha-jenkins-reporter
--t 600000
+--timeout 600000

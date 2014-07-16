@@ -18,14 +18,22 @@
         var ballot;
 
         beforeEach(function() {
-            return article.get()
-                .then(function() {
-                    return mrPlayer.get();
-                })
-                .then(function() {
-                    card = mrPlayer.cards[0];
-                    ballot = card.ballot;
-                    return card.playButton.click();
+            var promise = function () {
+                return article.get()
+                    .then(function() {
+                        return mrPlayer.get();
+                    })
+                    .then(function() {
+                        card = mrPlayer.cards[0];
+                        ballot = card.ballot;
+                        return card.playButton.click();
+                    });
+            }
+            return promise()
+                .thenCatch(function(error) {
+                    if(error) {
+                        return promise();
+                    }
                 });
         });
 
@@ -35,20 +43,6 @@
                     return expect(element.isDisplayed()).to.eventually.equal(false);
                 });
         });
-
-        // Possible future test
-        // describe('when the end of the video is reached', function() {
-        //     beforeEach(function() {
-        //         return card.player.skipToEnd();
-        //     });
-
-        //     it('should show the ballot vote-module', function() {
-        //         return ballot.vote.get()
-        //             .then(function(element) {
-        //                 return expect(element.isDisplayed()).to.eventually.equal(true);
-        //             });
-        //     });
-        // });
 
         describe('when the player is clicked', function() {
 
