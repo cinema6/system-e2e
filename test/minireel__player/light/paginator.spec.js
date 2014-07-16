@@ -4,8 +4,7 @@
     var browser = require('../browser'),
         expect = require('chai').expect,
         Q = require('q'),
-        chain = require('../../../utils/promise').chain,
-        config = require('../../config');
+        chain = require('../../../utils/promise').chain;
 
     var Article = require('./modules/Article'),
         Paginator = require('./modules/Paginator'),
@@ -19,7 +18,7 @@
 
     splash.exp = article.exp;
 
-    describe('MiniReel Player [light]: Paginator', function() {
+    describe(browser.browserName + ' MiniReel Player [light]: Paginator', function() {
 
         beforeEach(function() {
             return article.get()

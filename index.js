@@ -11,7 +11,7 @@ var BrowserStack = require( "browserstack" ),
     Q = require('q'),
     Queue = require('madlib-promise-queue'),
     chain = require('./utils/promise').chain,
-    config = require('./test/config');
+    config = require('./config');
 
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({
@@ -94,6 +94,7 @@ function runTestsForBrowser(browserName) {
             BROWSER_NAME: browserName,
             BROWSERSTACK_USER: process.env.BROWSERSTACK_USER,
             BROWSERSTACK_KEY: process.env.BROWSERSTACK_KEY,
+            BROWSERSTACK_DEBUG: process.env.BROWSERSTACK_DEBUG,
             JUNIT_REPORT_PATH: ('./reports/' + browserName + '_report.xml')
         }
     };

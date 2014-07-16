@@ -3,8 +3,7 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        Q = require('q'),
-        config = require('../../config');
+        Q = require('q');
 
     var Splash = require('../modules/Splash'),
         Article = require('./modules/Article');
@@ -12,7 +11,7 @@
     var article = new Article(browser),
         splash = new Splash(browser);
 
-    describe('MiniReel Player [light]: Splash Page', function() {
+    describe(browser.browserName + ' MiniReel Player [light]: Splash Page', function() {
 
         beforeEach(function() {
             splash.exp = article.exp;
