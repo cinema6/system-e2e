@@ -44,27 +44,48 @@ getStatus()
 .then(function(status) {
     // Make sure there are no sessions currently running
     if(status.running_sessions > 0) {
-        console.error('ERROR: there are sessions currently running in BrowserStack');
-        process.exit(1);
+        throw new Error('ERROR: there are sessions currently running in BrowserStack');
     }
+
+    // Output the maximum number of concurrent sessions allowed
     console.log('There is a limit of', status.sessions_limit, 'concurrent sessions.');
+
+    // Setup up the promise queue
     var queue = new Queue(status.sessions_limit);
-    return Q.all(browserList.map(function(browserName) {
+    return Q.allSettled(browserList.map(function(browserName) {
         return queue.ready()
             .then(function() {
                 console.log(browserName.toUpperCase() + ': Starting Tests');
-                return runTestsForBrowser(browserName);
+                return runTestsForBrowser(browserName)
             })
             .then(function() {
                 console.log(browserName.toUpperCase() + ': Tests Complete');
-                queue.ready();
                 queue.done();
-            });
+            })
+            .catch(function(error) {
+                console.log(browserName.toUpperCase() + ' ' + error);
+                queue.done();
+                throw new Error(error);
+            })
     }));
+
+})
+.then(function(results) {
+
+    // Check the results of each promise in the promise queue
+    results.forEach(function (result) {
+        if (result.state === "rejected") {
+            throw new Error(result.state.reason);
+        }
+    });
+
 })
 .catch(function(error) {
-    console.error('ERROR:', error);
+
+    // Handle errors from any of the previous steps
+    console.error(error);
     process.exit(1);
+
 })
 .done();
 
@@ -86,7 +107,7 @@ function getStatus() {
 function runTestsForBrowser(browserName) {
     var deferred = Q.defer();
     var cmd = 'mocha';
-    var args = ['--recursive'];
+    var args = [];
     var options = {
         stdio: 'inherit',
         env: {
@@ -99,11 +120,20 @@ function runTestsForBrowser(browserName) {
         }
     };
     var child = spawn(cmd, args, options);
-    child.on('close', function (code) {
+    child.on('exit', function (code) {
         Q.delay(10000)
         .then(function() {
-            return deferred.resolve();
+            if(code === 0) {
+                deferred.resolve();
+            } else {
+                deferred.reject(new Error('Mocha process exited with error code ' + code));
+            }
         });
     });
     return deferred.promise;
 }
+
+// Log the status code when the process ends
+process.on('exit', function(code) {
+  console.log('process ended with code ', code);
+});

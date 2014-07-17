@@ -11,7 +11,7 @@
 * Download [Selenium Server](http://docs.seleniumhq.org/download/) and specify its path in: ```test/config.json```
 * Install [chromedriver](https://code.google.com/p/selenium/wiki/ChromeDriver): ```brew install chromedriver```
 * Set the path to which the report will be saved: ```export JUNIT_REPORT_PATH=./reports/report.xml```
-* Run the tests: ```mocha --recursive```
+* Run the tests: ```mocha```
 
 ## Running the Tests on Browserstack
 * Set up the following environment variables described below
