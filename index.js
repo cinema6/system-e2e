@@ -44,32 +44,48 @@ getStatus()
 .then(function(status) {
     // Make sure there are no sessions currently running
     if(status.running_sessions > 0) {
-        console.error('ERROR: there are sessions currently running in BrowserStack');
-        process.exit(1);
+        throw new Error('ERROR: there are sessions currently running in BrowserStack');
     }
+
+    // Output the maximum number of concurrent sessions allowed
     console.log('There is a limit of', status.sessions_limit, 'concurrent sessions.');
+
+    // Setup up the promise queue
     var queue = new Queue(status.sessions_limit);
-    return Q.all(browserList.map(function(browserName) {
+    return Q.allSettled(browserList.map(function(browserName) {
         return queue.ready()
             .then(function() {
                 console.log(browserName.toUpperCase() + ': Starting Tests');
-                return runTestsForBrowser(browserName);
+                return runTestsForBrowser(browserName)
             })
             .then(function() {
                 console.log(browserName.toUpperCase() + ': Tests Complete');
                 queue.done();
             })
             .catch(function(error) {
-                console.log(browserName.toUpperCase() + ': Tests Error');
-                console.log(error);
+                console.log(browserName.toUpperCase() + ' ' + error);
                 queue.done();
+                throw new Error(error);
             })
-            .done();
     }));
+
+})
+.then(function(results) {
+
+    // Check the results of each promise in the promise queue
+    results.forEach(function (result) {
+        if (result.state === "rejected") {
+            throw new Error(result.state.reason);
+        }
+    });
+
 })
 .catch(function(error) {
+
+    // Handle errors from any of the previous steps
     console.error(error);
     process.exit(1);
+
 })
 .done();
 

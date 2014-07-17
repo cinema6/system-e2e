@@ -19,6 +19,6 @@
     "browserstack-webdriver": "^2.41.1",
     "selenium-runner": "^0.2.0",
     "browserstack": "^1.0.1",
-    "madlib-promise-queue": "^0.1.4"
+    "madlib-promise-queue": "^0.1.5"
   }
 }
