@@ -57,13 +57,18 @@ getStatus()
             })
             .then(function() {
                 console.log(browserName.toUpperCase() + ': Tests Complete');
-                queue.ready();
                 queue.done();
-            });
+            })
+            .catch(function(error) {
+                console.log(browserName.toUpperCase() + ': Tests Error');
+                console.log(error);
+                queue.done();
+            })
+            .done();
     }));
 })
 .catch(function(error) {
-    console.error('ERROR:', error);
+    console.error(error);
     process.exit(1);
 })
 .done();
@@ -86,7 +91,7 @@ function getStatus() {
 function runTestsForBrowser(browserName) {
     var deferred = Q.defer();
     var cmd = 'mocha';
-    var args = ['--recursive'];
+    var args = [];
     var options = {
         stdio: 'inherit',
         env: {
@@ -99,11 +104,20 @@ function runTestsForBrowser(browserName) {
         }
     };
     var child = spawn(cmd, args, options);
-    child.on('close', function (code) {
+    child.on('exit', function (code) {
         Q.delay(10000)
         .then(function() {
-            return deferred.resolve();
+            if(code === 0) {
+                deferred.resolve();
+            } else {
+                deferred.reject(new Error('Mocha process exited with error code ' + code));
+            }
         });
     });
     return deferred.promise;
 }
+
+// Log the status code when the process ends
+process.on('exit', function(code) {
+  console.log('process ended with code ', code);
+});
