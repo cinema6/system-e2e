@@ -58,4 +58,16 @@ module.exports = function(browser) {
             });
     };
 
+    this.mouseOver = function() {
+        var className = this.className;
+
+        return browser.findElement({ css: '.' + className })
+            .then(function click(element) {
+                browser.actions()
+                    .mouseMove(element)
+                    .perform();
+                return webdriver.promise.fulfilled(element);
+            });
+    };
+
 };

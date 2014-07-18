@@ -18,7 +18,7 @@
 
     splash.exp = article.exp;
 
-    describe(browser.browserName + ' MiniReel Player [light]: Paginator', function() {
+    describe(browser.browserName + ' MiniReel Player [lightbox]: Paginator', function() {
 
         beforeEach(function() {
             return article.get()
@@ -29,7 +29,7 @@
 
         describe('going to the next card', function() {
             it('should show each card', function() {
-                return chain([0, 1, 2, 3, 4, 5].map(function(index) {
+                return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
                         return mrPlayer.getCard(index)
                             .then(function(card) {
@@ -50,7 +50,7 @@
 
         describe('going to the previous card', function() {
             beforeEach(function() {
-                return chain([0, 1, 2, 3, 4, 5].map(function(index) {
+                return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
                         return mrPlayer.getCard(index)
                             .then(function() {
@@ -66,7 +66,7 @@
             });
 
             it('should show each card', function() {
-                return chain([4, 2, 0].map(function(index) {
+                return chain([3, 1, 0].map(function(index) {
                     return function() {
                         return paginator.prev()
                             .then(function() {
@@ -87,7 +87,7 @@
                 });
 
                 it('should show the ad', function() {
-                    return mrPlayer.getCard(3)
+                    return mrPlayer.getCard(2)
                         .then(function(card) {
                             return expect(card.isDisplayed()).to.eventually.equal(true);
                         });
@@ -100,7 +100,7 @@
                 });
 
                 it('should show the card', function() {
-                    return mrPlayer.getCard(5)
+                    return mrPlayer.getCard(4)
                         .then(function(card) {
                             return expect(card.isDisplayed()).to.eventually.equal(true);
                         });
