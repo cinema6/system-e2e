@@ -78,7 +78,7 @@
                     });
                 });
 
-                describe.only('the description', function() {
+                describe('the description', function() {
                     it('should be shown', function() {
                         return card.description.get()
                             .then(function(description) {
@@ -94,7 +94,23 @@
                     });
                 });
 
+                describe('skipping to the end of the video', function() {
+                    beforeEach(function() {
+                        return card.player.skipToEnd();
+                    });
+
+                    it('should autoplay the next card', function() {
+                        var nextCardIndex = mrPlayer.cards.indexOf(card) + 1;
+                        var nextCard = mrPlayer.cards[nextCardIndex];
+                        return nextCard.get()
+                            .then(function(element) {
+                                return expect(element.isDisplayed()).to.eventually.equal(true);
+                            });
+                    });
+                });
+
             });
         });
+
     });
 }());

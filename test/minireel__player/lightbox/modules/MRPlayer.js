@@ -48,6 +48,50 @@ module.exports = function(browser) {
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser, 2000);
     }
+    Player.prototype = {
+        skipToEnd: function() {
+            var self = this;
+            return browser.sleep(2000)
+                .then(function() {
+                    return self.get();
+                })
+                .then(function(element) {
+                    return browser.actions()
+                        .mouseDown(element)
+                        .mouseUp(element)
+                        .sendKeys(webdriver.Key.END)
+                        .perform();
+                })
+                .then(function() {
+                    return browser.sleep(2000);
+                });
+        }
+    }
+
+    function RecapButtons(recapCard) {
+        this.selector = 'ul.mr-recap__list button.mr-recap__imgBtn';
+        this.getButton = function(i) {
+            var selector = this.selector;
+            return recapCard.get()
+                .then(function(element) {
+                    return element.findElements({ css: selector });
+                })
+                .then(function(elements) {
+                    return elements[i];
+                });
+        }
+    } 
+    RecapButtons.prototype = {
+        clickButton: function(i) {
+            return this.getButton(i)
+                .then(function(element) {
+                    return element.click();
+                })
+                .then(function() {
+                    return browser.sleep(1500);
+                })
+        }
+    }
 
     function Card(title, source, description, index) {
         this.title = new Title(title, this);
@@ -70,6 +114,16 @@ module.exports = function(browser) {
             return self.getAdCard();
         }
     };
+
+    function RecapCard(index) {
+        this.index = index;
+        this.buttons = new RecapButtons(this);
+    }
+    RecapCard.prototype = {
+        get: function() {
+            return self.getCard(self.cards.indexOf(this));
+        }
+    }
 
     splash.exp = article.exp;
 
@@ -96,7 +150,7 @@ module.exports = function(browser) {
             },
             '...',
             3),
-        new Card(null,null,null,4)
+        new RecapCard(4)
     ];
 
     this.isAdCard = function (card){

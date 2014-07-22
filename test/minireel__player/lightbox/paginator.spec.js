@@ -65,7 +65,7 @@
                 }));
             });
 
-            it('should show each card', function() {
+            it('should show each video card', function() {
                 return chain([3, 1, 0].map(function(index) {
                     return function() {
                         return paginator.prev()
