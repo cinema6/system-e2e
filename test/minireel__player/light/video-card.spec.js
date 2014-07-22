@@ -44,7 +44,7 @@
             describe('test ' + index, function() {
                 beforeEach(fn);
 
-                describe.only('the title', function() {
+                describe('the title', function() {
                     it('should be shown', function() {
                         return card.title.get()
                             .then(function(title) {

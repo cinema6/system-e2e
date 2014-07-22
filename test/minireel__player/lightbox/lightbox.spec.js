@@ -46,7 +46,7 @@
 
         });
 
-        describe.only('the title', function() {
+        describe('the title', function() {
             it('should be displayed', function() {
                 return article.title.get()
                     .then(function(element) {
