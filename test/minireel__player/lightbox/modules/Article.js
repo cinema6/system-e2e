@@ -6,7 +6,7 @@ module.exports = function(browser) {
     this.exp = 'e-c5ed8122f00a87';
 
     function Title() {
-    	this.selector = '.entry-title a';
+    	this.selector = 'a.c6js-start';
     	this.get = function() {
     		return browser.findElement({ css: this.selector });
     	};

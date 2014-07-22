@@ -73,6 +73,15 @@ module.exports = function(browser) {
         }
     };
 
+    function RecapCard(index) {
+        this.index = index;
+    }
+    RecapCard.prototype = {
+        get: function() {
+            return self.getCard(self.cards.indexOf(this));
+        }
+    }
+
     splash.exp = article.exp;
 
     this.cards = [
@@ -90,7 +99,7 @@ module.exports = function(browser) {
             source: 'YouTube',
             href: 'https://www.youtube.com/watch?v=UQBc2RcbTHo'
         },2),
-        new Card(null,null,3)
+        new RecapCard(3)
     ];
 
     this.isAdCard = function (card){
