@@ -21,7 +21,7 @@
 
         capabilities = config.localOptions.capabilities;
         browserName = capabilities.browserName;
-        serverAddress = server.serverAddress;
+        serverAddress = server.address();
         webdriver = require('selenium-webdriver');
     }else{
         browserName = process.env.BROWSER_NAME || 'firefox';
