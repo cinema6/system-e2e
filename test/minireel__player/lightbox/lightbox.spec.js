@@ -56,11 +56,20 @@
 
             describe('when it is clicked', function() {
                 beforeEach(function() {
-                    return article.title.click();
+                    return article.title.click()
+                        .then(function() {
+                            return browser.findElement({ css: '.' + splash.className });
+                        })
+                        .then(function(element) {
+                            return element.findElement({ tagName: 'iframe' });
+                        })
+                        .then(function(iframe) {
+                            return browser.switchTo().frame(iframe);
+                        });
                 });
 
                 it('should show the first video card', function() {
-                    return mrPlayer.cards[0].get()
+                    return mrPlayer.getCard(0)
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);
                         })
@@ -85,7 +94,7 @@
             });
 
             it('should link to the proper video card', function() {
-                return mrPlayer.cards[0].get()
+                return mrPlayer.getCard(0)
                     .then(function(element) {
                         return expect(element.isDisplayed()).to.eventually.equal(true);
                     });

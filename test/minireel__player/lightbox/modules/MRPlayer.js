@@ -149,8 +149,8 @@ module.exports = function(browser) {
                 href: 'https://www.youtube.com/watch?v=i-ahuZEvWH8'
             },
             '...',
-            3),
-        new RecapCard(4)
+            2),
+        new RecapCard(3)
     ];
 
     this.isAdCard = function (card){
@@ -172,9 +172,9 @@ module.exports = function(browser) {
     this.getAdCard = function() {
         return browser.findElements({ css: 'ul.mr-cards__list>li' })
             .then(function(lis) {
-                return lis[2];
+                return lis[4];
             });
-    }
+    };
 
     this.get = function() {
         splash.get();
