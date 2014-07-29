@@ -1,8 +1,7 @@
 module.exports = function(browser) {
     'use strict';
 
-    var webdriver = require('selenium-webdriver'),
-        utils = require('../../../../utils/utils');
+    var utils = require('../../../../utils/utils');
 
     var Splash = require('../../modules/Splash'),
         Article = require('./Article');
@@ -47,24 +46,9 @@ module.exports = function(browser) {
         this.selector = '.mr-player,iframe';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser, 2000);
-    }
-    Player.prototype = {
-        skipToEnd: function() {
-            var self = this;
-            return browser.sleep(2000)
-                .then(function() {
-                    return self.get();
-                })
-                .then(function(element) {
-                    return browser.actions()
-                        .mouseDown(element)
-                        .mouseUp(element)
-                        .sendKeys(webdriver.Key.END)
-                        .perform();
-                })
-                .then(function() {
-                    return browser.sleep(2000);
-                });
+        this.watchVideo = function() {
+            var time = (card.duration + 5) * 1000;
+            return browser.sleep(time);
         }
     }
 
@@ -93,12 +77,13 @@ module.exports = function(browser) {
         }
     }
 
-    function Card(title, source, description, index) {
+    function Card(title, source, duration, description, index) {
         this.title = new Title(title, this);
-        this.description = new Description(description, this);
-        this.player = new Player(this);
         this.source = source ? new Source(source.source, source.href, this) : null;
+        this.duration = duration;
+        this.description = new Description(description, this);
         this.index = index;
+        this.player = new Player(this);
     }
     Card.prototype = {
         get: function() {
@@ -133,6 +118,7 @@ module.exports = function(browser) {
                 source: 'YouTube',
                 href: 'https://www.youtube.com/watch?v=F5FEj9U-CJM'
             },
+            240,
             'Here we have true facts about the mantis shrimp.',
             0),
         new Card('Mantis Shrimp Solves a Rubiks Cube',
@@ -140,7 +126,8 @@ module.exports = function(browser) {
                 source: 'YouTube',
                 href: 'https://www.youtube.com/watch?v=0uTdTRXNdEY'
             },
-            'This highly intelligent stomotopod does the unthinkable and solves a Rubiks cube in record time.',
+            40,
+            'This highly intelligent stomatopod does the unthinkable and solves a Rubiks cube in record time.',
             1),
         new AdCard(),
         new Card('Mantis Shrimp Punches Hole in Clam',
@@ -148,6 +135,7 @@ module.exports = function(browser) {
                 source: 'YouTube',
                 href: 'https://www.youtube.com/watch?v=i-ahuZEvWH8'
             },
+            30,
             '...',
             2),
         new RecapCard(3)

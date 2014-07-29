@@ -18,22 +18,14 @@
         var ballot;
 
         beforeEach(function() {
-            var promise = function () {
-                return article.get()
-                    .then(function() {
-                        return mrPlayer.get();
-                    })
-                    .then(function() {
-                        card = mrPlayer.cards[0];
-                        ballot = card.ballot;
-                        return card.playButton.click();
-                    });
-            }
-            return promise()
-                .thenCatch(function(error) {
-                    if(error) {
-                        return promise();
-                    }
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
+                })
+                .then(function() {
+                    card = mrPlayer.cards[0];
+                    ballot = card.ballot;
+                    return card.playButton.click();
                 });
         });
 

@@ -1,8 +1,7 @@
 module.exports = function(browser) {
     'use strict';
 
-    var webdriver = require('selenium-webdriver'),
-        utils = require('../../../../utils/utils');
+    var utils = require('../../../../utils/utils');
 
     var Splash = require('../../modules/Splash'),
         Article = require('./Article'),

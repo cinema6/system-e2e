@@ -39,7 +39,6 @@ module.exports = function(browser) {
 
     this.click = function() {
         var className = this.className;
-
         return browser.findElement({ css: '.' + className })
             .then(function click(element) {
                 browser.actions()

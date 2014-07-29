@@ -17,23 +17,16 @@
         var card;
 
         beforeEach(function() {
-            var promise = function () {
-                return article.get()
-                    .then(function() {
-                        return mrPlayer.get();
-                    });
-            }
-            return promise()
-                .thenCatch(function(error) {
-                    if(error) {
-                        return promise();
-                    }
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
                 });
         });
 
         [
             function() {
-                return card = mrPlayer.cards[0];
+                card = mrPlayer.cards[1];
+                return paginator.skipTo(1);
             },
             function() {
                 card = mrPlayer.cards[3];
@@ -94,9 +87,9 @@
                     });
                 });
 
-                describe('skipping to the end of the video', function() {
+                describe('watching the video', function() {
                     beforeEach(function() {
-                        return card.player.skipToEnd();
+                        return card.player.watchVideo();
                     });
 
                     it('should autoplay the next card', function() {
