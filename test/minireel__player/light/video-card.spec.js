@@ -29,8 +29,10 @@
             },
             function() {
                 card = mrPlayer.cards[4];
-                paginator.skipTo(3);
-                return paginator.skipTo(2);
+                return paginator.skipTo(3)
+                    .then(function() {
+                        return paginator.skipTo(2);
+                    });
             }
         ].forEach(function(fn, index) {
             describe('test ' + index, function() {
