@@ -16,9 +16,9 @@
         },
         "explorer": {
             "browser": "IE",
-            "browser_version": "11.0",
+            "browser_version": "10.0",
             "os": "Windows",
-            "os_version": "8.1",
+            "os_version": "8",
             "resolution": "1280x1024"
         },
         "firefox": {

@@ -19,12 +19,6 @@ module.exports = function(browser) {
         return browser.get('http://demo.cinema6.com/e2e/2014/07/16/vertical-stack/')
             .then(function() {
                 return browser.sleep(1500);
-            })
-            .then(function() {
-                return browser.executeScript(function() {
-                    window.scrollBy(0, 200);
-                });
             });
-;
     };
 };
