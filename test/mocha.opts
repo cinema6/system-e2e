@@ -1,4 +1,4 @@
 --reporter mocha-jenkins-reporter
---timeout 600000
+--timeout 120000
 --recursive
-
+--slow 1000

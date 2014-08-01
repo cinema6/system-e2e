@@ -20,7 +20,6 @@
     splash.exp = article.exp;
 
     describe(browser.browserName + ' MiniReel Player [lightbox]: Lightbox', function() {
-        var card;
 
         beforeEach(function() {
             return article.get();
@@ -47,6 +46,7 @@
         });
 
         describe('the title', function() {
+
             it('should be displayed', function() {
                 return article.title.get()
                     .then(function(element) {
@@ -55,13 +55,11 @@
             });
 
             describe('when it is clicked', function() {
+
                 beforeEach(function() {
                     return article.title.click()
                         .then(function() {
-                            return browser.findElement({ css: '.' + splash.className });
-                        })
-                        .then(function(element) {
-                            return element.findElement({ tagName: 'iframe' });
+                            return splash.iframe.get();
                         })
                         .then(function(iframe) {
                             return browser.switchTo().frame(iframe);
@@ -72,9 +70,6 @@
                     return mrPlayer.getCard(0)
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);
-                        })
-                        .thenCatch(function(error) {
-                            expect(error).to.not.exist();
                         });
                 });
 

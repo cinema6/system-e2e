@@ -165,15 +165,7 @@
                                     }
                                 })
                                 .then(function() {
-                                    return mrPlayer.getCard(index);
-                                })
-                                .then(function(card) {
-                                    return card.isDisplayed();
-                                })
-                                .then(function(displayed) {
-                                    if(displayed) {
-                                        return lightbox.nextButton.click();
-                                    }
+                                    return lightbox.nextButton.click();
                                 });
                         };
                     }));
