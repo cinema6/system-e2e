@@ -98,7 +98,7 @@
                         return card.player.watchVideo();
                     });
 
-                    it('should autoplay the next card', function() {
+                    it('should autoplay the next card (could be an ad)', function() {
                         var nextCardIndex = mrPlayer.cards.indexOf(card) + 1;
                         var nextCard = mrPlayer.cards[nextCardIndex];
                         return nextCard.get()

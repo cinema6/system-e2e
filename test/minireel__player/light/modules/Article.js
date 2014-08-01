@@ -1,5 +1,3 @@
-var WebDriver = require('selenium-webdriver');
-
 module.exports = function(browser) {
     'use strict';
 

@@ -10,7 +10,7 @@ module.exports = function(browser) {
         this.get = function() {
             return browser.findElement({ css: this.selector });
         };
-        this.click = utils.mouseClickMethod(this, browser);
+        this.click = utils.clickMethod(this, browser);
     }
 
     this.title = new Title();
