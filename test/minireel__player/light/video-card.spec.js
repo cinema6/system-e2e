@@ -17,17 +17,9 @@
         var card;
 
         beforeEach(function() {
-            var promise = function () {
-                return article.get()
-                    .then(function() {
-                        return mrPlayer.get();
-                    });
-            }
-            return promise()
-                .thenCatch(function(error) {
-                    if(error) {
-                        return promise();
-                    }
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
                 });
         });
 
@@ -37,8 +29,10 @@
             },
             function() {
                 card = mrPlayer.cards[4];
-                paginator.skipTo(3);
-                return paginator.skipTo(2);
+                return paginator.skipTo(3)
+                    .then(function() {
+                        return paginator.skipTo(2);
+                    });
             }
         ].forEach(function(fn, index) {
             describe('test ' + index, function() {

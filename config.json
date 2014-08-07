@@ -18,44 +18,23 @@
             "browser": "IE",
             "browser_version": "11.0",
             "os": "Windows",
-            "os_version": "8.1",
-            "resolution": "1024x768"
+            "os_version": "7",
+            "resolution": "1280x1024",
+            "ignoreProtectedModeSettings": false
         },
         "firefox": {
             "browserName": "firefox",
             "browser_version": "30.0",
             "os": "Windows",
             "os_version": "8.1",
-            "resolution": "1024x768"
-        },
-        "safari": {
-            "browserName": "Safari",
-            "browser_version": "5.1",
-            "os": "Windows",
-            "os_version": "8.1",
-            "resolution": "1024x768"
+            "resolution": "1280x1024"
         },
         "chrome": {
             "browser": "Chrome",
             "browser_version": "35.0",
             "os": "Windows",
             "os_version": "8.1",
-            "resolution": "1024x768"
-        },
-        "opera": {
-            "browser": "Opera",
-            "browser_version": "12.16",
-            "os": "Windows",
-            "os_version": "8.1",
-            "resolution": "1024x768"
-        },
-        "iphone": {
-            "browserName": "iPhone",
-            "device": "iPhone 5C"
-        },
-        "android": {
-            "browserName": "android",
-            "device": "Google Nexus 5"
+            "resolution": "1280x1024"
         }
     }
 }

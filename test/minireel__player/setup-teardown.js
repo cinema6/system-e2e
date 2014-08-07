@@ -10,6 +10,7 @@
         chai
             .use(chaiWebdriver(browser))
             .use(chaiAsPromised);
+        return browser.manage().window().maximize();
     });
 
     after(function() {

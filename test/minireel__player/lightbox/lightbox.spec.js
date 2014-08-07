@@ -20,7 +20,6 @@
     splash.exp = article.exp;
 
     describe(browser.browserName + ' MiniReel Player [lightbox]: Lightbox', function() {
-        var card;
 
         beforeEach(function() {
             return article.get();
@@ -47,6 +46,7 @@
         });
 
         describe('the title', function() {
+
             it('should be displayed', function() {
                 return article.title.get()
                     .then(function(element) {
@@ -55,13 +55,11 @@
             });
 
             describe('when it is clicked', function() {
+
                 beforeEach(function() {
                     return article.title.click()
                         .then(function() {
-                            return browser.findElement({ css: '.' + splash.className });
-                        })
-                        .then(function(element) {
-                            return element.findElement({ tagName: 'iframe' });
+                            return splash.iframe.get();
                         })
                         .then(function(iframe) {
                             return browser.switchTo().frame(iframe);
@@ -72,111 +70,13 @@
                     return mrPlayer.getCard(0)
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);
-                        })
-                        .thenCatch(function(error) {
-                            expect(error).to.not.exist();
                         });
                 });
 
             });
         });
 
-        describe('the recap card', function() {
-            beforeEach(function() {
-                mrPlayer.get()
-                    .then(function() {
-                        return paginator.skipTo(3);
-                    })
-                    .then(function() {
-                        card = mrPlayer.cards[4];
-                        return card.buttons.clickButton(0);
-                    });
-            });
 
-            it('should link to the proper video card', function() {
-                return mrPlayer.getCard(0)
-                    .then(function(element) {
-                        return expect(element.isDisplayed()).to.eventually.equal(true);
-                    });
-            });
-        });
-
-        describe('the nav buttons on the video player', function() {
-            beforeEach(function() {
-                return mrPlayer.get();
-            });
-
-            describe('when the next button is clicked', function() {
-                it('should show each card', function() {
-                    return chain([0, 1, 2, 3, 4].map(function(index) {
-                        return function() {
-                            return mrPlayer.getCard(index)
-                                .then(function(card) {
-                                    return expect(card.isDisplayed()).to.eventually.equal(true);
-                                })
-                                .then(function() {
-                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                        return browser.sleep(7500);
-                                    }
-                                })
-                                .then(function() {
-                                    if(index < 4) {
-                                        return lightbox.nextButton.click();
-                                    }
-                                });
-                        };
-                    }));
-                });
-            });
-
-            describe('when the previous button is clicked', function() {
-                beforeEach(function() {
-                    return chain([0, 1, 2].map(function(index) {
-                        return function() {
-                            return mrPlayer.getCard(index)
-                                .then(function() {
-                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                        return browser.sleep(7500);
-                                    }
-                                })
-                                .then(function() {
-                                    return lightbox.nextButton.click();
-                                });
-                        };
-                    }));
-                });
-
-                it('should show each video card', function() {
-                    return chain([1, 0].map(function(index) {
-                        return function() {
-                            return lightbox.prevButton.click()
-                                .then(function() {
-                                    return mrPlayer.getCard(index);
-                                })
-                                .then(function(card) {
-                                    return expect(card.isDisplayed()).to.eventually.equal(true);
-                                });
-                        };
-                    }));
-                });
-            });
-
-            describe('exiting the MiniReel', function() {
-                beforeEach(function() {
-                    return lightbox.prevButton.click()
-                        .then(function() {
-                            return browser.switchTo().defaultContent();
-                        });
-                });
-
-                it('should hide the iframe', function() {
-                    return splash.iframe.get()
-                        .then(function(iframe) {
-                            return expect(iframe.isDisplayed()).to.eventually.equal(false);
-                        });
-                });
-            });
-        });
 
     });
 }());

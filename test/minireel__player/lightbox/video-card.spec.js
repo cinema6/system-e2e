@@ -7,33 +7,32 @@
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
-        Paginator = require('./modules/Paginator');
+        Paginator = require('./modules/Paginator'),
+        Splash = require('../modules/Splash'),
+        Lightbox = require('./modules/Lightbox');
 
     var article = new Article(browser),
         mrPlayer = new MRPlayer(browser),
-        paginator = new Paginator(browser);
+        paginator = new Paginator(browser),
+        splash = new Splash(browser),
+        lightbox = new Lightbox(browser);
+
+    splash.exp = article.exp;
 
     describe(browser.browserName + ' MiniReel Player [lightbox]: Video Card', function() {
         var card;
 
         beforeEach(function() {
-            var promise = function () {
-                return article.get()
-                    .then(function() {
-                        return mrPlayer.get();
-                    });
-            }
-            return promise()
-                .thenCatch(function(error) {
-                    if(error) {
-                        return promise();
-                    }
+            return article.get()
+                .then(function() {
+                    return mrPlayer.get();
                 });
         });
 
         [
             function() {
-                return card = mrPlayer.cards[0];
+                card = mrPlayer.cards[1];
+                return paginator.skipTo(1);
             },
             function() {
                 card = mrPlayer.cards[3];
@@ -94,12 +93,12 @@
                     });
                 });
 
-                describe('skipping to the end of the video', function() {
+                describe('watching the video', function() {
                     beforeEach(function() {
-                        return card.player.skipToEnd();
+                        return card.player.watchVideo();
                     });
 
-                    it('should autoplay the next card', function() {
+                    it('should autoplay the next card (could be an ad)', function() {
                         var nextCardIndex = mrPlayer.cards.indexOf(card) + 1;
                         var nextCard = mrPlayer.cards[nextCardIndex];
                         return nextCard.get()
@@ -109,6 +108,99 @@
                     });
                 });
 
+            });
+        });
+
+        describe('the recap card', function() {
+            beforeEach(function() {
+                return paginator.skipTo(3)
+                    .then(function() {
+                        card = mrPlayer.cards[4];
+                        return card.buttons.clickButton(0);
+                    });
+            });
+            it('should link to the proper video card', function() {
+                return mrPlayer.getCard(0)
+                    .then(function(element) {
+                        return expect(element.isDisplayed()).to.eventually.equal(true);
+                    });
+            });
+        });
+
+        describe('the nav buttons on the video player', function() {
+
+            describe('when the next button is clicked', function() {
+
+                it('should show each card', function() {
+                    return chain([0, 1, 2, 3, 4].map(function(index) {
+                        return function() {
+                            return mrPlayer.getCard(index)
+                                .then(function(card) {
+                                    return expect(card.isDisplayed()).to.eventually.equal(true);
+                                })
+                                .then(function() {
+                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                        return browser.sleep(8000);
+                                    }
+                                })
+                                .then(function() {
+                                    if(index < 4) {
+                                        return lightbox.nextButton.click();
+                                    }
+                                });
+                        };
+                    }));
+                });
+            });
+
+            describe('when the previous button is clicked', function() {
+
+                beforeEach(function() {
+                    return chain([0, 1, 2].map(function(index) {
+                        return function() {
+                            return mrPlayer.getCard(index)
+                                .then(function() {
+                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                        return browser.sleep(8000);
+                                    }
+                                })
+                                .then(function() {
+                                    return lightbox.nextButton.click();
+                                });
+                        };
+                    }));
+                });
+
+                it('should show each video card', function() {
+                    return chain([1, 0].map(function(index) {
+                        return function() {
+                            return lightbox.prevButton.click()
+                                .then(function() {
+                                    return mrPlayer.getCard(index);
+                                })
+                                .then(function(card) {
+                                    return expect(card.isDisplayed()).to.eventually.equal(true);
+                                });
+                        };
+                    }));
+                });
+            });
+
+            describe('exiting the MiniReel', function() {
+
+                beforeEach(function() {
+                    return lightbox.prevButton.click()
+                        .then(function() {
+                            return browser.switchTo().defaultContent();
+                        });
+                });
+
+                it('should hide the iframe', function() {
+                    return splash.iframe.get()
+                        .then(function(iframe) {
+                            return expect(iframe.isDisplayed()).to.eventually.equal(false);
+                        });
+                });
             });
         });
 

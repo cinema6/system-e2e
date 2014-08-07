@@ -33,7 +33,6 @@
 
             it('should preload the iframe', function() {
                 return Q.all([
-                    expect(browser.findElement({ className: splash.className }).isElementPresent({ tagName: 'iframe' })).to.eventually.equal(true),
                     expect('.' + splash.className + ' iframe').dom.not.to.be.visible()
                 ]);
             });
