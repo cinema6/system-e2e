@@ -111,6 +111,7 @@ function runTestsForBrowser(browserName) {
     var options = {
         stdio: 'inherit',
         env: {
+            PATH: process.env.PATH,
             RUN_LOCALLY: false,
             BROWSER_NAME: browserName,
             BROWSERSTACK_USER: process.env.BROWSERSTACK_USER,
