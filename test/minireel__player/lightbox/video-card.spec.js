@@ -98,7 +98,7 @@
                         return card.player.watchVideo();
                     });
 
-                    it('should autoplay the next card (could be an ad)', function() {
+                    it.skip('should autoplay the next card (could be an ad)', function() {
                         var nextCardIndex = mrPlayer.cards.indexOf(card) + 1;
                         var nextCard = mrPlayer.cards[nextCardIndex];
                         return nextCard.get()
@@ -131,7 +131,7 @@
 
             describe('when the next button is clicked', function() {
 
-                it('should show each card', function() {
+                it.skip('should show each card', function() {
                     return chain([0, 1, 2, 3, 4].map(function(index) {
                         return function() {
                             return mrPlayer.getCard(index)
@@ -171,7 +171,7 @@
                     }));
                 });
 
-                it('should show each video card', function() {
+                it.skip('should show each video card', function() {
                     return chain([1, 0].map(function(index) {
                         return function() {
                             return lightbox.prevButton.click()
