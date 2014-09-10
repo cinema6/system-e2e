@@ -8,6 +8,7 @@ module.exports = function(browser) {
     this.exp = 'e-656ebb63ef2c6d';
 
     this.get = function() {
+        splashDisplayed = false;
         return promiseWhile(
             function() {
                 return !splashDisplayed;
@@ -33,7 +34,7 @@ module.exports = function(browser) {
                     })
                     .thenCatch(function(error) {
                         if(error.name === 'NoSuchElementError') {
-                            
+
                         }
                     });
             }
