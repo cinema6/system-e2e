@@ -1,7 +1,8 @@
 module.exports = function(browser) {
     'use strict';
 
-    var utils = require('../../../../utils/utils'),
+    var self = this,
+        utils = require('../../../../utils/utils'),
         promiseWhile = require('../../../../utils/promise').promiseWhile,
         splashDisplayed = false,
         articleURL = 'http://demo.cinema6.com/e2e/2014/07/16/vertical-stack/';
@@ -26,9 +27,6 @@ module.exports = function(browser) {
             },
             function() {
                 return browser.get(articleURL)
-                    .then(function() {
-                        return browser.navigate().refresh();
-                    })
                     .then(function() {
                         return browser.sleep(1500);
                     })
