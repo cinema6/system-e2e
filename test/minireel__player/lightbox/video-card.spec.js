@@ -3,7 +3,8 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        promiseWhile = require('../../../utils/promise').promiseWhile;
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -156,19 +157,24 @@
             describe('when the previous button is clicked', function() {
 
                 beforeEach(function() {
-                    return chain([0, 1, 2].map(function(index) {
-                        return function() {
-                            return mrPlayer.getCard(index)
-                                .then(function() {
-                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                        return browser.sleep(8000);
-                                    }
+                    var cardDisplayed = false;
+                    return promiseWhile(
+                        function() {
+                            return !cardDisplayed;
+                        },
+                        function() {
+                            return mrPlayer.getCard(3)
+                                .then(function(lastVideoCard) {
+                                    return lastVideoCard.isDisplayed();
                                 })
-                                .then(function() {
-                                    return lightbox.nextButton.click();
+                                .then(function(isDisplayed) {
+                                    cardDisplayed = isDisplayed;
+                                    if (!isDisplayed) {
+                                        lightbox.nextButton.click();
+                                    }
                                 });
-                        };
-                    }));
+                        }
+                    );
                 });
 
                 it('should show each video card', function() {
