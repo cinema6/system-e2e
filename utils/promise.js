@@ -9,7 +9,6 @@
         }, Q.when());
     };
 
-
     exports.promiseWhile = function(condition, body) {
         var deferred = Q.defer();
         function loop() {
