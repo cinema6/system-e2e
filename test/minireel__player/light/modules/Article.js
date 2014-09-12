@@ -3,7 +3,8 @@ module.exports = function(browser) {
 
     var self = this,
         promiseWhile = require('../../../../utils/promise').promiseWhile,
-        splashDisplayed = false;
+        splashDisplayed = false,
+        articleURL = 'http://demo.cinema6.com/e2e/2014/06/17/light-text/';
 
     this.exp = 'e-656ebb63ef2c6d';
 
@@ -14,7 +15,7 @@ module.exports = function(browser) {
                 return !splashDisplayed;
             },
             function() {
-                return browser.get('http://demo.cinema6.com/e2e/2014/06/17/light-text/')
+                return browser.get(articleURL)
                    .then(function() {
                        return browser.sleep(1500);
                     })
@@ -24,21 +25,20 @@ module.exports = function(browser) {
                         });
                     })
                     .then(function() {
-                        return browser.findElement({ css: '.c6embed-' + self.exp });
+                        return browser.findElement({ css: '.c6embed-' + self.exp })
+                            .thenCatch(function(error) {
+                                console.log('Cannot find c6embed element, refreshing the page.');
+                            });
                     })
                     .then(function(element) {
-                        return element.isDisplayed();
-                    })
-                    .then(function(isDisplayed) {
-                        splashDisplayed = isDisplayed;
-                    })
-                    .thenCatch(function(error) {
-                        if(error.name === 'NoSuchElementError') {
-
+                        if(element) {
+                            return element.isDisplayed()
+                            .then(function(isDisplayed) {
+                                splashDisplayed = isDisplayed;
+                            });
                         }
                     });
             }
         );
-
     };
 };

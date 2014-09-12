@@ -27,7 +27,7 @@
                 });
         });
 
-        describe.skip('going to the next card', function() {
+        describe('going to the next card', function() {
             it('should show each card', function() {
                 return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
@@ -48,7 +48,7 @@
             });
         });
 
-        describe.skip('going to the previous card', function() {
+        describe('going to the previous card', function() {
             beforeEach(function() {
                 return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
@@ -81,7 +81,7 @@
         });
 
         describe('skipping ahead to a card', function() {
-            describe.skip('if there is an ad in front of the card', function() {
+            describe('if there is an ad in front of the card', function() {
                 beforeEach(function() {
                     return paginator.skipTo(2);
                 });
