@@ -1,7 +1,9 @@
 module.exports = function(browser) {
     'use strict';
 
-    var MRPlayer = require('./MRPlayer');
+    var MRPlayer = require('./MRPlayer'),
+        utils = require('../../../../utils/utils');
+
 
     var mrPlayer = new MRPlayer(browser);
 
@@ -11,6 +13,8 @@ module.exports = function(browser) {
             return browser.findElement({ css: this.selector });
         }
     };
+    this.nextButton.click = utils.clickMethod(this.nextButton, browser);
+
     this.prevButton = {
         selector: 'button.pager__prev',
         get: function() {

@@ -29,24 +29,29 @@
         });
 
         describe('going to the next card', function() {
-            it('should show each card', function() {
+            it.only('should show each card', function() {
                 this.timeout(60000);
                 return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
                         return mrPlayer.getCard(index)
                             .then(function(card) {
+                                console.log('expecting card ' + index);
                                 return expect(card.isDisplayed()).to.eventually.equal(true);
                             })
                             .then(function() {
-                                if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
                                     return browser.sleep(7000);
+                                }
+                                else if(mrPlayer.isAdCard(mrPlayer.cards[index+1])) {
+                                    console.log('next card is an ad');
+                                    return browser.sleep(5000);
                                 }
                             })
                             .then(function() {
-                                return browser.sleep(5000)
-                                    .then(function() {
-                                        return paginator.next();
-                                    });
+                                if(index<4) {
+                                    console.log('clicking next');
+                                    return paginator.next();
+                                }
                             });
                     };
                 }));

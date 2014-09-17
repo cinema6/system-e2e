@@ -4,7 +4,8 @@
     var browser = require('../browser'),
         expect = require('chai').expect,
         Q = require('q'),
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        promiseWhile = require('../../../utils/promise').promiseWhile;
 
     var Article = require('./modules/Article'),
         Paginator = require('./modules/Paginator'),
@@ -54,19 +55,24 @@
 
         describe('going to the previous card', function() {
             beforeEach(function() {
-                return chain([0, 1, 2, 3, 4, 5].map(function(index) {
-                    return function() {
-                        return mrPlayer.getCard(index)
+                var recapCardVisible = false;
+                return promiseWhile(
+                    function() {
+                        return !recapCardVisible;
+                    }
+                    , function() {
+                        return paginator.nextButton.click()
                             .then(function() {
-                                if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                    return browser.sleep(7500);
-                                }
+                                return mrPlayer.getCard(5);
                             })
-                            .then(function() {
-                                return paginator.next();
+                            .then(function(recapCard) {
+                                return recapCard.isDisplayed();
+                            })
+                            .then(function(isDisplayed) {
+                                recapCardVisible = isDisplayed;
                             });
-                    };
-                }));
+                    }
+                );
             });
 
             it('should show each video card', function() {

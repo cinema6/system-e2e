@@ -65,14 +65,22 @@
                     return ballot.vote.closeButton.click();
                 });
 
-                it('should hide the ballot vote-module after a second', function() {
-                    return browser.sleep(1000)
-                      .then(function() {
-                          return ballot.vote.get();
-                      })
-                      .then(function(element) {
-                          return expect(element.isDisplayed()).to.eventually.equal(false);
-                      });
+                it('should hide the ballot vote-module', function() {
+                    return browser.wait(function() {
+                        return ballot.vote.get()
+                            .then(function(element) {
+                                return element.isDisplayed();
+                            })
+                            .then(function(isDisplayed) {
+                                return !isDisplayed;
+                            })
+                    }, 5000)
+                    .then(function() {
+                        return ballot.vote.get();
+                    })
+                    .then(function(element) {
+                        return expect(element.isDisplayed()).to.eventually.equal(false);
+                    });
                 });
 
             });
