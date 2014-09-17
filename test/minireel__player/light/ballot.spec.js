@@ -65,11 +65,14 @@
                     return ballot.vote.closeButton.click();
                 });
 
-                it('should hide the ballot vote-module', function() {
-                    return ballot.vote.get()
-                        .then(function(element) {
-                            return expect(element.isDisplayed()).to.eventually.equal(false);
-                        });
+                it('should hide the ballot vote-module after a second', function() {
+                    return browser.sleep(1000)
+                      .then(function() {
+                          return ballot.vote.get();
+                      })
+                      .then(function(element) {
+                          return expect(element.isDisplayed()).to.eventually.equal(false);
+                      });
                 });
 
             });
@@ -80,8 +83,11 @@
                     return ballot.vote.click();
                 });
 
-                it('should hide the ballot vote-module when the overlay is clicked', function() {
-                    return ballot.vote.get()
+                it('should hide the ballot vote-module when the overlay is clicked after a second', function() {
+                    return browser.sleep(1000)
+                        .then(function() {
+                            return ballot.vote.get();
+                        })
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(false);
                         });
@@ -95,8 +101,11 @@
                     return ballot.vote.watchAgain.click();
                 });
 
-                it('should hide the ballot vote-module', function() {
-                    return ballot.vote.get()
+                it('should hide the ballot vote-module after a second', function() {
+                    return browser.sleep(1000)
+                        .then(function() {
+                            return ballot.vote.get();
+                        })
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(false);
                         });
@@ -125,8 +134,11 @@
                     return ballot.vote.voteButton.click();
                 });
 
-                it('should hide the ballot vote-module and its controls', function() {
-                    return ballot.vote.get()
+                it('should hide the ballot vote-module and its controls after a second', function() {
+                    return browser.sleep(1000)
+                        .then(function() {
+                            return ballot.vote.get();
+                        })
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(false);
                         })
@@ -165,7 +177,7 @@
                             return tally.get()
                                 .then(function(element){
                                     // Regex explanation:
-                                    // 100 or 
+                                    // 100 or
                                     // an optional non-zero digit followed by a digit
                                     // all followed by %
                                     return expect(element.getText()).to.eventually
@@ -181,8 +193,11 @@
                         return ballot.results.closeButton.click();
                     });
 
-                    it('should hide the ballot results-module', function() {
-                        return ballot.results.get()
+                    it('should hide the ballot results-module after a second', function() {
+                        return browser.sleep(1000)
+                            .then(function() {
+                                return ballot.results.get();
+                            })
                             .then(function(element) {
                                 return expect(element.isDisplayed()).to.eventually.equal(false);
                             });
@@ -220,8 +235,11 @@
                         return ballot.results.click();
                     });
 
-                    it('should hide the ballot results-module', function() {
-                        return ballot.results.get()
+                    it('should hide the ballot results-module after a second', function() {
+                        return browser.sleep(1000)
+                            .then(function() {
+                                return ballot.results.get();
+                            })
                             .then(function(element) {
                                 return expect(element.isDisplayed()).to.eventually.equal(false);
                             });
@@ -235,8 +253,11 @@
                         return ballot.results.watchAgain.click();
                     });
 
-                    it('should hide the ballot vote-module', function() {
-                        return ballot.results.get()
+                    it('should hide the ballot vote-module after a second', function() {
+                        return browser.sleep(1000)
+                            .then(function() {
+                                return ballot.results.get();
+                            })
                             .then(function(element) {
                                 return expect(element.isDisplayed()).to.eventually.equal(false);
                             });
@@ -249,4 +270,3 @@
         });
     });
 }());
-

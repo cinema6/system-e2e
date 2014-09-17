@@ -30,6 +30,7 @@
 
         describe('going to the next card', function() {
             it('should show each card', function() {
+                this.timeout(60000);
                 return chain([0, 1, 2, 3, 4].map(function(index) {
                     return function() {
                         return mrPlayer.getCard(index)
@@ -38,18 +39,21 @@
                             })
                             .then(function() {
                                 if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                    return browser.sleep(7500);
+                                    return browser.sleep(7000);
                                 }
                             })
                             .then(function() {
-                                return paginator.next();
+                                return browser.sleep(5000)
+                                    .then(function() {
+                                        return paginator.next();
+                                    });
                             });
                     };
                 }));
             });
         });
 
-        describe.only('going to the previous card', function() {
+        describe.skip('going to the previous card', function() {
 
             beforeEach(function() {
                 var cardDisplayed = false;
@@ -90,7 +94,10 @@
         describe('skipping ahead to a card', function() {
             describe('if there is an ad in front of the card', function() {
                 beforeEach(function() {
-                    return paginator.skipTo(2);
+                    return browser.sleep(5000)
+                        .then(function() {
+                            return paginator.skipTo(2);
+                        });
                 });
 
                 it('should show the ad', function() {

@@ -54,19 +54,22 @@
                                 return expect(element.isDisplayed()).to.eventually.equal(true);
                             });
                     });
- 
+
                     describe('when it is clicked', function() {
                         beforeEach(function() {
                             return card.playButton.click();
                         });
- 
-                        it('should disappear', function() {
-                            return card.playButton.get()
+
+                        it('should disappear after a second', function() {
+                            return browser.sleep(1000)
+                                .then(function() {
+                                    return card.playButton.get()
+                                })
                                 .then(function(element){
                                     return expect(element.isDisplayed()).to.eventually.equal(false);
                                 });
                         });
- 
+
                         it('should reappear when the playing video is clicked', function() {
                             return card.player.click()
                                 .then(function() {

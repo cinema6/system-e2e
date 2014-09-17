@@ -29,6 +29,7 @@
 
         describe('going to the next card', function() {
             it('should show each card', function() {
+                this.timeout(90000); // extend the global timeout
                 return chain([0, 1, 2, 3, 4, 5].map(function(index) {
                     return function() {
                         return mrPlayer.getCard(index)
@@ -37,11 +38,14 @@
                             })
                             .then(function() {
                                 if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                    return browser.sleep(7500);
+                                    return browser.sleep(7000);
                                 }
                             })
                             .then(function() {
-                                return paginator.next();
+                                return browser.sleep(5000)
+                                    .then(function() {
+                                        return paginator.next();
+                                    });
                             });
                     };
                 }));

@@ -1,7 +1,7 @@
 {
     "localOptions": {
         "server": {
-            "jar": "./test/selenium-server-standalone-2.42.2.jar",
+            "jar": "./test/selenium-server-standalone-2.43.1.jar",
             "options": {
                 "port": "4444"
             }

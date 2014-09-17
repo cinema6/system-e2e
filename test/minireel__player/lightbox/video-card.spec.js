@@ -96,6 +96,7 @@
 
                 describe('watching the video', function() {
                     beforeEach(function() {
+                        this.timeout(60000);
                         return card.player.watchVideo();
                     });
 
@@ -133,6 +134,7 @@
             describe('when the next button is clicked', function() {
 
                 it('should show each card', function() {
+                    this.timeout(60000); // extend the global timeout
                     return chain([0, 1, 2, 3, 4].map(function(index) {
                         return function() {
                             return mrPlayer.getCard(index)
@@ -141,12 +143,15 @@
                                 })
                                 .then(function() {
                                     if(mrPlayer.isAdCard(mrPlayer.cards[index])){
-                                        return browser.sleep(8000);
+                                        return browser.sleep(7000);
                                     }
                                 })
                                 .then(function() {
                                     if(index < 4) {
-                                        return lightbox.nextButton.click();
+                                        return browser.sleep(5000)
+                                            .then(function() {
+                                                return lightbox.nextButton.click();
+                                            });
                                     }
                                 });
                         };
@@ -157,19 +162,19 @@
             describe('when the previous button is clicked', function() {
 
                 beforeEach(function() {
-                    var cardDisplayed = false;
+                    var nextButtonExists = true;
                     return promiseWhile(
                         function() {
-                            return !cardDisplayed;
+                            return nextButtonExists;
                         },
                         function() {
-                            return mrPlayer.getCard(3)
-                                .then(function(lastVideoCard) {
-                                    return lastVideoCard.isDisplayed();
+                            return lightbox.nextButton.get()
+                                .then(function(nextButton) {
+                                    return nextButton.isDisplayed();
                                 })
                                 .then(function(isDisplayed) {
-                                    cardDisplayed = isDisplayed;
-                                    if (!isDisplayed) {
+                                    nextButtonExists = isDisplayed;
+                                    if (nextButtonExists) {
                                         lightbox.nextButton.click();
                                     }
                                 });
@@ -178,6 +183,7 @@
                 });
 
                 it('should show each video card', function() {
+                    console.log('beginning test');
                     return chain([1, 0].map(function(index) {
                         return function() {
                             return lightbox.prevButton.click()

@@ -20,31 +20,11 @@ module.exports = function(browser) {
     this.title = new Title();
 
     this.get = function() {
-        splashDisplayed = false;
-        return promiseWhile(
-            function() {
-                return !splashDisplayed;
-            },
-            function() {
-                return browser.get(articleURL)
-                    .then(function() {
-                        return browser.sleep(1500);
-                    })
-                    .then(function() {
-                        return browser.findElement({ css: '.c6embed-' + self.exp })
-                            .thenCatch(function(error) {
-                                console.log('Cannot find c6embed element, refreshing the page.');
-                            });
-                    })
-                    .then(function(element) {
-                        if(element) {
-                            return element.isDisplayed()
-                            .then(function(isDisplayed) {
-                                splashDisplayed = isDisplayed;
-                            });
-                        }
-                    });
-            }
-        );
+        return browser.get(articleURL)
+            .then(function() {
+                return browser.executeScript(function() {
+                    window.scrollBy(0, 300);
+                });
+            });
     };
 };

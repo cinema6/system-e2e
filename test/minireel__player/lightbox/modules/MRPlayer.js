@@ -64,7 +64,7 @@ module.exports = function(browser) {
                     return elements[i];
                 });
         }
-    } 
+    }
     RecapButtons.prototype = {
         clickButton: function(i) {
             return this.getButton(i)
@@ -165,9 +165,13 @@ module.exports = function(browser) {
     };
 
     this.get = function() {
-        splash.get();
-        splash.click();
-        return browser.findElement({ css: '.' + splash.className })
+        return splash.get()
+            .then(function() {
+                splash.click();
+            })
+            .then(function() {
+                return browser.findElement({ css: '.' + splash.className })
+            })
             .then(function(element) {
                 return element.findElement({ tagName: 'iframe' });
             })
