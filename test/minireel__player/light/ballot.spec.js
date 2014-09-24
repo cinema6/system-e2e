@@ -3,7 +3,8 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain;
+        chain = require('../../../utils/promise').chain,
+        promiseWhile = require('../../../utils/promise').promiseWhile;
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -17,7 +18,7 @@
         var card;
         var ballot;
 
-        beforeEach(function() {
+        function startPlayingVideoCard() {
             return article.get()
                 .then(function() {
                     return mrPlayer.get();
@@ -25,8 +26,24 @@
                 .then(function() {
                     card = mrPlayer.cards[0];
                     ballot = card.ballot;
-                    return card.playButton.click();
-                });
+                    // Click the play button
+                    return card.playButton.click()
+                        .then(function() {
+                            return browser.wait(function() {
+                                return card.playButton.get()
+                                    .then(function(playButton) {
+                                        return playButton.isDisplayed();
+                                    })
+                                    .then(function(isDisplayed) {
+                                        return !isDisplayed;
+                                    });
+                            }, 10000);
+                        });
+                })
+        }
+
+        beforeEach(function() {
+            return startPlayingVideoCard();
         });
 
         it('should not be shown initially', function() {
@@ -39,7 +56,16 @@
         describe('when the player is clicked', function() {
 
             beforeEach(function() {
-                return card.player.click();
+                this.timeout(120000)
+                return card.player.click()
+                    .then(function() {
+                        return browser.wait(function() {
+                            return ballot.vote.closeButton.get()
+                                .then(function(closeButton) {
+                                    return closeButton.isDisplayed();
+                                });
+                        }, 10000);
+                    });
             });
 
             it('should show the ballot vote-module and its controls', function() {

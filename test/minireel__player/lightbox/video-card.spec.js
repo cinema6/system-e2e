@@ -133,25 +133,31 @@
 
             describe('when the next button is clicked', function() {
 
+                this.timeout(120000); // extend the global timeout
+
+                // Occasionally fails
                 it('should show each card', function() {
-                    this.timeout(60000); // extend the global timeout
                     return chain([0, 1, 2, 3, 4].map(function(index) {
                         return function() {
                             return mrPlayer.getCard(index)
                                 .then(function(card) {
+                                    console.log('Expecting card ' + index + ' to be displayed.')
                                     return expect(card.isDisplayed()).to.eventually.equal(true);
                                 })
                                 .then(function() {
-                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])){
+                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
+                                        console.log('Waiting 7 seconds for the ad to play');
                                         return browser.sleep(7000);
+                                    }
+                                    else if(mrPlayer.isAdCard(mrPlayer.cards[index+1])) {
+                                        console.log('Waiting on a card before an ad');
+                                        return browser.sleep(5000);
                                     }
                                 })
                                 .then(function() {
-                                    if(index < 4) {
-                                        return browser.sleep(5000)
-                                            .then(function() {
-                                                return lightbox.nextButton.click();
-                                            });
+                                    if(index<4) {
+                                        console.log('clicking the next button');
+                                        return lightbox.nextButton.click();
                                     }
                                 });
                         };

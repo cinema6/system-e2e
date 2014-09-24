@@ -60,8 +60,16 @@
                             return card.playButton.click();
                         });
 
-                        it('should disappear after a second', function() {
-                            return browser.sleep(1000)
+                        it('should disappear', function() {
+                            return browser.wait(function() {
+                                    return card.playButton.get()
+                                        .then(function(element) {
+                                            return element.isDisplayed();
+                                        })
+                                        .then(function(isDisplayed) {
+                                            return !isDisplayed;
+                                        })
+                                }, 3000)
                                 .then(function() {
                                     return card.playButton.get()
                                 })

@@ -23,7 +23,7 @@ module.exports = function(browser) {
         return browser.get(articleURL)
             .then(function() {
                 return browser.executeScript(function() {
-                    window.scrollBy(0, 300);
+                    window.scrollBy(0, 200);
                 });
             });
     };

@@ -5,43 +5,31 @@ module.exports = function(browser) {
 
     var mrPlayer = new MRPlayer(browser);
 
+    var utils = require('../../../../utils/utils');
+
+    var self = this;
+
     this.nextButton = {
         selector: 'button.mr-pager__next',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
     };
+    this.nextButton.click = utils.clickMethod(this.nextButton, browser);
+
     this.prevButton = {
         selector: 'button.mr-pager__prev',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
     };
+    this.prevButton.click = utils.clickMethod(this.prevButton, browser);
+
     this.thumbs = {
         selector: '.mr-pages__list button',
         get: function() {
             return browser.findElements({ css: this.selector });
         }
-    };
-
-    this.next = function() {
-        return this.nextButton.get()
-            .then(function(nextButton) {
-                return nextButton.click();
-            })
-            .then(function sleep() {
-                return browser.sleep(2000);
-            });
-    };
-
-    this.prev = function() {
-        return this.prevButton.get()
-            .then(function(prevButton) {
-                return prevButton.click();
-            })
-            .then(function sleep() {
-                return browser.sleep(2000);
-            });
     };
 
     this.skipTo = function(index) {

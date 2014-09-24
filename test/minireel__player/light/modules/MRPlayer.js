@@ -40,13 +40,13 @@ module.exports = function(browser) {
     function PlayButton(card) {
         this.selector = 'button.player__play-btn';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.clickMethod(this, browser, 2000);
+        this.click = utils.clickMethod(this, browser);
     }
 
     function Player(card) {
         this.selector = '.mr-player,iframe';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.mouseClickMethod(this, browser, 2000);
+        this.click = utils.mouseClickMethod(this, browser);
     }
 
     function Card(title, source, index) {

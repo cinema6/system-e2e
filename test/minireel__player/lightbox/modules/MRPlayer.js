@@ -146,10 +146,15 @@ module.exports = function(browser) {
     }
 
     this.getCard = function(cardNum) {
+        // Make sure the card number argument is valid
+        if (cardNum < 0 || cardNum >= this.cards.length) {
+            throw new Error('Specified card is invalid.');
+        }
+        // Get the requested card
         var card = this.cards[cardNum];
         if (this.isAdCard(card)){
             return this.getAdCard();
-         } else {
+        } else {
              return browser.findElements({ css: 'ul.mr-cards__list>li' })
                  .then(function(lis) {
                      return lis[card.index];

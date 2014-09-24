@@ -12,17 +12,16 @@
 
     exports.clickMethod = function(element, browser, sleepTime) {
         return function() {
+            var visibleElement;
             return browser.wait(function() {
                 return element.get()
                     .then(function(e) {
+                        visibleElement = e;
                         return e.isDisplayed();
                     });
             })
             .then(function() {
-                return element.get();
-            })
-            .then(function(e) {
-                return e.click();
+                return visibleElement.click();
             });
         };
     };
@@ -41,7 +40,7 @@
             .then(function(e) {
                 return browser.actions()
                     .mouseDown(e)
-                    .mouseUp(e)
+                    .mouseUp()
                     .perform();
             });
         };

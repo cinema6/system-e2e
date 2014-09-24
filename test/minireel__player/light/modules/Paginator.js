@@ -2,7 +2,8 @@ module.exports = function(browser) {
     'use strict';
 
     var MRPlayer = require('./MRPlayer'),
-        utils = require('../../../../utils/utils');
+        utils = require('../../../../utils/utils'),
+        self = this;
 
 
     var mrPlayer = new MRPlayer(browser);
@@ -21,6 +22,8 @@ module.exports = function(browser) {
             return browser.findElement({ css: this.selector });
         }
     };
+    this.prevButton.click = utils.clickMethod(this.prevButton, browser);
+
     this.thumbs = {
         selector: '.pages__list button',
         get: function() {
@@ -28,36 +31,18 @@ module.exports = function(browser) {
         }
     };
 
-    this.next = function() {
-        return this.nextButton.get()
-            .then(function(nextButton) {
-                return nextButton.click();
-            })
-            .then(function sleep() {
-                return browser.sleep(2000);
-            });
-    };
-
-    this.prev = function() {
-        return this.prevButton.get()
-            .then(function(prevButton) {
-                return prevButton.click();
-            })
-            .then(function sleep() {
-                return browser.sleep(2000);
-            });
-    };
-
     this.skipTo = function(index) {
-        return this.thumbs.get()
-            .then(function(thumbs) {
-                return thumbs[index];
-            })
-            .then(function(thumb) {
-                return thumb.click();
+            return browser.wait(function() {
+                return self.thumbs.get()
+                    .then(function(thumbs) {
+                        return thumbs[index].isDisplayed();
+                    });
             })
             .then(function() {
-                return browser.sleep(2000);
+                return self.thumbs.get();
+            })
+            .then(function(thumbs) {
+                return thumbs[index].click();
             });
     };
 
