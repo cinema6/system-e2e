@@ -239,21 +239,34 @@
 
                     describe('when the ballot reappears', function() {
                         beforeEach(function() {
-                            return card.playButton.click()
+
+                            // Make sure the module is done fading out
+                            return browser.wait(function() {
+                                return ballot.results.get()
+                                    .then(function(resultsModule) {
+                                        return resultsModule.isDisplayed();
+                                    })
+                                    .then(function(isDisplayed) {
+                                        return !isDisplayed;
+                                    });
+                                })
+                                .then(function() {
+                                    return card.playButton.click();
+                                })
                                 .then(function() {
                                     return card.player.click();
                                 });
+
                         });
 
-                        it('should not show the ballot vote-module', function() {
+                        it('should show the ballot results-module and not the vote-module', function() {
                             return ballot.vote.get()
                                 .then(function(element) {
                                     return expect(element.isDisplayed()).to.eventually.equal(false);
-                                });
-                        });
-
-                        it('should show the ballot results-module', function() {
-                            return ballot.results.get()
+                                })
+                                .then(function() {
+                                    return ballot.results.get();
+                                })
                                 .then(function(element) {
                                     return expect(element.isDisplayed()).to.eventually.equal(true);
                                 });

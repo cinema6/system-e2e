@@ -73,10 +73,12 @@
                         return browser.wait(function() {
                             return paginator.nextButton.get()
                                 .then(function(nextButton) {
-                                    return nextButton.getAttribute("class")
-                                        .then(function(classes) {
-                                            console.log(classes);
-                                            return (classes.indexOf("mr-pager__btn--disabled") === -1)
+                                    return browser.findElement({ css: '.adSkip__group' })
+                                        .then(function(adSkip) {
+                                            return adSkip.isDisplayed();
+                                        })
+                                        .then(function(isDisplayed) {
+                                            return !isDisplayed;
                                         });
                                 });
                             })
@@ -120,7 +122,7 @@
         });
 
         describe('skipping ahead to a card', function() {
-            describe.skip('if there is an ad in front of the card', function() {
+            describe('if there is an ad in front of the card', function() {
                 beforeEach(function() {
                     return paginator.skipTo(2);
                 });

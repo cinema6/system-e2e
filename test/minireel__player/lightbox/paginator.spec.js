@@ -117,7 +117,20 @@
             it('should show each video card', function() {
                 return chain([3, 1, 0].map(function(index) {
                     return function() {
-                        return paginator.prevButton.click()
+                        return paginator.prevButton.get()
+                            .then(function(nextButton) {
+                                return nextButton.getAttribute("class")
+                                    .then(function(classes) {
+                                        console.log(classes);
+                                        return (classes.indexOf("mr-pager__btn--disabled") === -1);
+                                    });
+                            })
+                            .then(function() {
+                                return paginator.prevButton.get();
+                            })
+                            .then(function(prevButton) {
+                                return prevButton.click();
+                            })
                             .then(function() {
                                 console.log('getting card ' + index);
                                 return mrPlayer.getCard(index);
@@ -132,7 +145,7 @@
         });
 
         describe('skipping ahead to a card', function() {
-            describe.skip('if there is an ad in front of the card', function() {
+            describe('if there is an ad in front of the card', function() {
                 beforeEach(function() {
                     return browser.sleep(5000)
                         .then(function() {

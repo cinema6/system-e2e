@@ -20,9 +20,9 @@
         var webdriver = require('selenium-webdriver');
 
         browser = module.exports = new webdriver.Builder()
-            .withCapabilities(webdriver.Capabilities.firefox())
+            .withCapabilities(webdriver.Capabilities.chrome())
             .build();
-        browser.browserName = 'firefox';
+        browser.browserName = 'chrome';
 
     }else{
         var browserName = process.env.BROWSER_NAME || 'firefox';

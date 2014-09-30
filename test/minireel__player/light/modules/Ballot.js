@@ -62,11 +62,18 @@ module.exports = function Ballot(browser, card) {
         this.get = utils.getMethod(results, this.selector);
     }
 
+    function ResultsBar(results) {
+        this.selector = 'div.results__bar1';
+        this.get = utils.getMethod(results, this.selector);
+        this.click = utils.clickMethod(this, browser);
+    }
+
     function ResultsModule() {
         this.watchAgain = new ResultsWatchAgain(this);
         this.closeButton = new ResultsCloseButton(this);
         this.tally = [new ResultsTally(this, 0), new ResultsTally(this, 1)];
-        this.controls = [this.watchAgain, this.closeButton, this.tally[0], this.tally[1]];
+        this.resultsBar = new ResultsBar(this);
+        this.controls = [this.watchAgain, this.closeButton, this.tally[0], this.tally[1], this.resultsBar];
         this.selector = 'ballot-results-module.results-module';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser);

@@ -67,13 +67,18 @@ module.exports = function(browser) {
     }
     RecapButtons.prototype = {
         clickButton: function(i) {
-            return this.getButton(i)
-                .then(function(element) {
-                    return element.click();
-                })
-                .then(function() {
-                    return browser.sleep(1500);
-                })
+            var self = this;
+            var visibleElement;
+            return browser.wait(function() {
+                return self.getButton(i)
+                    .then(function(e) {
+                        visibleElement = e;
+                        return e.isDisplayed();
+                    });
+            })
+            .then(function() {
+                return visibleElement.click();
+            });
         }
     }
 
