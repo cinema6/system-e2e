@@ -59,6 +59,14 @@
                 beforeEach(function() {
                     return article.title.click()
                         .then(function() {
+                            return browser.wait(function() {
+                                return splash.iframe.get()
+                                    .then(function(iframe) {
+                                        return iframe.isDisplayed();
+                                    });
+                            });
+                        })
+                        .then(function() {
                             return splash.iframe.get();
                         })
                         .then(function(iframe) {

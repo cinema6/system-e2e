@@ -20,7 +20,19 @@
             return article.get()
                 .then(function() {
                     return mrPlayer.get();
-                });
+                })
+                .then(function() {
+                    return browser.wait(function() {
+                        return mrPlayer.cards[0].get()
+                            .then(function() {
+                                return true;
+                            })
+                            .thenCatch(function(error) {
+                                return false;
+                            });
+                    });
+                })
+
         });
 
         [
