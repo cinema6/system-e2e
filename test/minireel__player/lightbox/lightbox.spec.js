@@ -81,9 +81,8 @@
                         });
                 });
 
-            });
+            }); // end - describe when it is clicked
         });
-
 
 
     });

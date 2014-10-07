@@ -28,6 +28,7 @@
                                 return true;
                             })
                             .thenCatch(function(error) {
+                                console.log(error);
                                 return false;
                             });
                     });

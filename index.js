@@ -11,12 +11,18 @@ var BrowserStack = require( "browserstack" ),
     Q = require('q'),
     Queue = require('madlib-promise-queue'),
     chain = require('./utils/promise').chain,
-    config = require('./config');
+    config = require('./config.json'),
+    secrets = require('./.browserstack_secrets.json');
+
+// Aquire the neccessary BrowserStack credentials
+var browserStackUser = process.env.BROWSERSTACK_USER || secrets.browserstack.user,
+    browserStackKey = process.env.BROWSERSTACK_KEY || secrets.browserstack.key;
+
 
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({
-    username: process.env.BROWSERSTACK_USER,
-    password: process.env.BROWSERSTACK_KEY
+    username: browserStackUser,
+    password: browserStackKey
 });
 
 // Announce the start of the tests
@@ -114,8 +120,8 @@ function runTestsForBrowser(browserName) {
             PATH: process.env.PATH,
             RUN_LOCALLY: false,
             BROWSER_NAME: browserName,
-            BROWSERSTACK_USER: process.env.BROWSERSTACK_USER,
-            BROWSERSTACK_KEY: process.env.BROWSERSTACK_KEY,
+            BROWSERSTACK_USER: browserStackUser,
+            BROWSERSTACK_KEY: browserStackKey,
             BROWSERSTACK_DEBUG: process.env.BROWSERSTACK_DEBUG,
             JUNIT_REPORT_PATH: ('./reports/' + browserName + '_report.xml')
         }

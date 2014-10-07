@@ -123,7 +123,7 @@ module.exports = function(browser) {
                 source: 'YouTube',
                 href: 'https://www.youtube.com/watch?v=F5FEj9U-CJM'
             },
-            240,
+            30,
             'Here we have true facts about the mantis shrimp.',
             0),
         new Card('Mantis Shrimp Solves a Rubiks Cube',

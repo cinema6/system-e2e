@@ -33,16 +33,18 @@ module.exports = function(browser) {
     };
 
     this.skipTo = function(index) {
-        return this.thumbs.get()
-            .then(function(thumbs) {
-                return thumbs[index];
-            })
-            .then(function(thumb) {
-                return thumb.click();
-            })
-            .then(function() {
-                return browser.sleep(2000);
-            });
+        return browser.wait(function() {
+            return self.thumbs.get()
+                .then(function(thumbs) {
+                    return thumbs[index].isDisplayed();
+                });
+        })
+        .then(function() {
+            return self.thumbs.get();
+        })
+        .then(function(thumbs) {
+            return thumbs[index].click();
+        });
     };
 
     this.get = function() {
