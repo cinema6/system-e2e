@@ -53,6 +53,9 @@ module.exports = function(browser) {
                     return element.findElement({ tagName: 'iframe' })
                         .then(function(iframe) {
                             return iframe.isDisplayed();
+                        })
+                        .thenCatch(function(error) {
+                            return false;
                         });
                 }, 10000);
             });

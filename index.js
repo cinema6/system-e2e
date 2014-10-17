@@ -11,13 +11,20 @@ var BrowserStack = require( "browserstack" ),
     Q = require('q'),
     Queue = require('madlib-promise-queue'),
     chain = require('./utils/promise').chain,
-    config = require('./config.json'),
+    config = require('./config.json');
+
+var secrets;
+
+// Check if the secrets file exists
+if (fs.existsSync('./.browserstack_secrets.json')) {
     secrets = require('./.browserstack_secrets.json');
+} else {
+    secrets = {"browserstack":{}};
+}
 
 // Aquire the neccessary BrowserStack credentials
 var browserStackUser = process.env.BROWSERSTACK_USER || secrets.browserstack.user,
     browserStackKey = process.env.BROWSERSTACK_KEY || secrets.browserstack.key;
-
 
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({

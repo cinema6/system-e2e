@@ -41,11 +41,19 @@
                             .then(function() {
                                 if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
                                     console.log('waiting for ad to finish');
-                                    return browser.sleep(7000);
+                                    return browser.wait(function() {
+                                        return browser.findElement({ css: '.adSkip__group' })
+                                            .then(function(adSkip) {
+                                                return adSkip.isDisplayed();
+                                            })
+                                            .then(function(isDisplayed) {
+                                                return !isDisplayed;
+                                            });
+                                    });
                                 }
                                 else if(mrPlayer.isAdCard(mrPlayer.cards[index+1])) {
                                     console.log('loading ad');
-                                    return browser.sleep(5000);
+                                    return browser.sleep(10000);
                                 }
                             })
                             .then(function() {

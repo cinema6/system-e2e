@@ -22,9 +22,21 @@ module.exports = function(browser) {
     this.get = function() {
         return browser.get(articleURL)
             .then(function() {
-                return browser.executeScript(function() {
-                    window.scrollBy(0, 200);
+                return browser.wait(function() {
+                    console.log('waiting for title');
+                    return browser.findElements({css: self.title.selector})
+                        .then(function(elements) {
+                            return (elements.length === 1);
+                        })
+                        .thenCatch(function() {
+                            return false;
+                        });
                 });
+            })
+            .then(function() {
+              return browser.executeScript(function() {
+                  window.scrollBy(0, 200);
+              });
             });
     };
 };

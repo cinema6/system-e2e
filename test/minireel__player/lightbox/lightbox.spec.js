@@ -55,7 +55,6 @@
             });
 
             describe('when it is clicked', function() {
-
                 beforeEach(function() {
                     return article.title.click()
                         .then(function() {
@@ -80,8 +79,8 @@
                             return expect(element.isDisplayed()).to.eventually.equal(true);
                         });
                 });
-
             }); // end - describe when it is clicked
+
         });
 
 

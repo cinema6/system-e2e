@@ -126,7 +126,7 @@
                         return card.buttons.clickButton(0);
                     })
                     .then(function() {
-                        // an ad should appear, wait for it to becoem skippable
+                        // an ad should appear, wait for it to become skippable
                         return browser.wait(function() {
                             return browser.findElement({ css: '.adSkip__group' })
                                 .then(function(adSkip) {
@@ -140,6 +140,9 @@
                     .then(function() {
                         // click the next button to view the first card
                         return paginator.nextButton.click();
+                    })
+                    .then(function() {
+                        return browser.sleep(1000);
                     });
             });
             it('should link to the proper video card', function() {

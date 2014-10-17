@@ -20,7 +20,6 @@ module.exports = function(browser) {
             selector: 'a',
             get: function() {
                 var selector = this.selector;
-
                 return self.get()
                     .then(function(source) {
                         return source.findElement({ css: selector });
