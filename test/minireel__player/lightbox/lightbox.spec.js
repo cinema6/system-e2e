@@ -62,6 +62,9 @@
                                 return splash.iframe.get()
                                     .then(function(iframe) {
                                         return iframe.isDisplayed();
+                                    })
+                                    .thenCatch(function() {
+                                        return false;
                                     });
                             });
                         })
