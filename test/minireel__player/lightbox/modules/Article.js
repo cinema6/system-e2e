@@ -23,7 +23,6 @@ module.exports = function(browser) {
         return browser.get(articleURL)
             .then(function() {
                 return browser.wait(function() {
-                    console.log('waiting for title');
                     return browser.findElements({css: self.title.selector})
                         .then(function(elements) {
                             return (elements.length === 1);

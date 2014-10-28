@@ -15,7 +15,7 @@ module.exports = function(browser) {
             return browser.findElement({ css: this.selector });
         }
     };
-    this.nextButton.click = utils.clickMethod(this.nextButton, browser);
+    this.nextButton.click = utils.mouseClickMethod(this.nextButton, browser);
 
     this.prevButton = {
         selector: 'button.mr-pager__prev',
@@ -23,7 +23,7 @@ module.exports = function(browser) {
             return browser.findElement({ css: this.selector });
         }
     };
-    this.prevButton.click = utils.clickMethod(this.prevButton, browser);
+    this.prevButton.click = utils.mouseClickMethod(this.prevButton, browser);
 
     this.thumbs = {
         selector: '.mr-pages__list button',

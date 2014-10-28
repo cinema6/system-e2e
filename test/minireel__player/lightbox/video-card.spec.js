@@ -135,19 +135,23 @@
                                 .then(function(isDisplayed) {
                                     return !isDisplayed;
                                 });
-                        });
+                        }, 10000);
                     })
                     .then(function() {
                         // click the next button to view the first card
+                        console.log('clicking the next button');
                         return paginator.nextButton.click();
                     })
                     .then(function() {
+                        console.log('taking a rest');
                         return browser.sleep(1000);
                     });
             });
             it('should link to the proper video card', function() {
+                console.log('getting card');
                 return mrPlayer.getCard(0)
                     .then(function(element) {
+                        console.log('expecting display');
                         return expect(element.isDisplayed()).to.eventually.equal(true);
                     });
             });
