@@ -113,41 +113,35 @@
             });
         });
 
-        describe('the recap card', function() {
+        describe('clicking a link on the recap card', function() {
+
+          this.timeout(120000); // extend the global timeout
+
             beforeEach(function() {
-                return paginator.skipTo(3)
+              var recapCardDisplayed = false;
+              return promiseWhile(
+                function() {
+                  return !recapCardDisplayed;
+                },
+                function() {
+                  return paginator.nextButton.click()
                     .then(function() {
-                        // wait for ad to preload?
-                        return browser.sleep(5000);
+                        return mrPlayer.getCard(4);
                     })
-                    .then(function() {
-                        // click the link to the first card
-                        card = mrPlayer.cards[4];
-                        return card.buttons.clickButton(0);
+                    .then(function(recapCard) {
+                        return recapCard.isDisplayed();
                     })
-                    .then(function() {
-                        // an ad should appear, wait for it to become skippable
-                        return browser.wait(function() {
-                            return browser.findElement({ css: '.adSkip__group' })
-                                .then(function(adSkip) {
-                                    return adSkip.isDisplayed();
-                                })
-                                .then(function(isDisplayed) {
-                                    return !isDisplayed;
-                                });
-                        }, 10000);
-                    })
-                    .then(function() {
-                        // click the next button to view the first card
-                        console.log('clicking the next button');
-                        return paginator.nextButton.click();
-                    })
-                    .then(function() {
-                        console.log('taking a rest');
-                        return browser.sleep(1000);
+                    .then(function(isDisplayed) {
+                        recapCardDisplayed = isDisplayed;
                     });
+                }
+              )
+              .then(function(recapCard) {
+                console.log('clicking');
+                return mrPlayer.cards[4].buttons.clickButton(0);
+              });
             });
-            it('should link to the proper video card', function() {
+            it('should link to its corresponding video card', function() {
                 console.log('getting card');
                 return mrPlayer.getCard(0)
                     .then(function(element) {
