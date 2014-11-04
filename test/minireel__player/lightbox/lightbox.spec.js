@@ -19,25 +19,30 @@
 
     splash.exp = article.exp;
 
-    describe(browser.browserName + ' MiniReel Player [lightbox]: Lightbox', function() {
+    describe(2, browser.browserName + ' MiniReel Player [lightbox]: Lightbox', function() {
 
-        beforeEach(function() {
+        this.beforeEach = function() {
             return article.get();
-        });
+        };
 
         describe('the close button', function() {
-            beforeEach(function() {
-                return mrPlayer.get()
+            var self = this;
+            this.beforeEach = function() {
+                return self.parent.beforeEach()
+                    .then(mrPlayer.get)
                     .then(function() {
                         return lightbox.closeButton.click();
                     })
                     .then(function() {
                         return browser.switchTo().defaultContent();
                     });
-            });
+            };
 
             it('should hide the iframe', function() {
-                return splash.iframe.get()
+                return self.beforeEach()
+                    .then(function() {
+                      return splash.iframe.get();
+                    })
                     .then(function(iframe) {
                         return expect(iframe.isDisplayed()).to.eventually.equal(false);
                     });
@@ -55,7 +60,8 @@
             });
 
             describe('when it is clicked', function() {
-                beforeEach(function() {
+                var self = this;
+                this.beforeEach = function() {
                     return article.title.click()
                         .then(function() {
                             return browser.wait(function() {
@@ -74,10 +80,13 @@
                         .then(function(iframe) {
                             return browser.switchTo().frame(iframe);
                         });
-                });
+                };
 
                 it('should show the first video card', function() {
-                    return mrPlayer.getCard(0)
+                    return self.beforeEach()
+                        .then(function() {
+                            return mrPlayer.getCard(0);
+                        })
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);
                         });

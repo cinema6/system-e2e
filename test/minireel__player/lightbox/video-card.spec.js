@@ -20,15 +20,16 @@
 
     splash.exp = article.exp;
 
-    describe(browser.browserName + ' MiniReel Player [lightbox]: Video Card', function() {
+    describe(2, browser.browserName + ' MiniReel Player [lightbox]: Video Card', function() {
         var card;
 
-        beforeEach(function() {
+        var self = this;
+        this.beforeEach = function() {
             return article.get()
                 .then(function() {
                     return mrPlayer.get();
                 });
-        });
+        };
 
         [
             function() {
@@ -40,11 +41,17 @@
             }
         ].forEach(function(fn, index) {
             describe('test ' + index, function() {
-                beforeEach(fn);
+                var self = this;
+                this.beforeEach = function() {
+                    return self.parent.beforeEach().then(fn);
+                };
 
                 describe('the title', function() {
                     it('should be shown', function() {
-                        return card.title.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return card.title.get();
+                            })
                             .then(function(title) {
                                 return expect(title.isDisplayed()).to.eventually.equal(true);
                             });
@@ -53,21 +60,28 @@
 
                 describe('the source', function() {
                     it('should be shown', function() {
-                        return card.source.get()
+                        return self.beforeEach()
+                            .then(card.source.get)
                             .then(function(source) {
                                 return expect(source.isDisplayed()).to.eventually.equal(true);
                             });
                     });
 
                     it('should link to the video', function() {
-                        return card.source.link.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return card.source.link.get();
+                            })
                             .then(function(link) {
                                 return expect(link.getAttribute('href')).to.eventually.equal(card.source.href);
                             });
                     });
 
                     it('should have the correct text', function() {
-                        return card.source.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return card.source.get();
+                            })
                             .then(function(source) {
                                 return expect(source.getText()).to.eventually.equal(card.source.text);
                             });
@@ -76,14 +90,20 @@
 
                 describe('the description', function() {
                     it('should be shown', function() {
-                        return card.description.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return card.description.get();
+                            })
                             .then(function(description) {
                                 return expect(description.isDisplayed()).to.eventually.equal(true);
                             });
                     });
 
                     it('should have the correct text', function() {
-                        return card.description.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return card.description.get()
+                            })
                             .then(function(description) {
                                 return expect(description.getText()).to.eventually.equal(card.description.text);
                             });
@@ -91,10 +111,14 @@
                 });
 
                 describe('watching the video', function() {
-                    beforeEach(function() {
+                    var self = this;
+                    this.beforeEach = function() {
                         this.timeout(60000);
-                        return card.player.watchVideo();
-                    });
+                        return self.parent.beforeEach()
+                            .then(function() {
+                                return card.player.watchVideo();
+                            });
+                    };
 
                     it('should autoplay the next card (could be an ad)', function() {
                         var nextCard;
@@ -103,7 +127,10 @@
                         } else if(card.index === 2) {
                             nextCard = mrPlayer.cards[2];
                         }
-                        return nextCard.get()
+                        return self.beforeEach()
+                            .then(function() {
+                                return nextCard.get();
+                            })
                             .then(function(element) {
                                 return expect(element.isDisplayed()).to.eventually.equal(true);
                             });
@@ -117,33 +144,40 @@
 
           this.timeout(120000); // extend the global timeout
 
-            beforeEach(function() {
+            var self = this;
+            this.beforeEach = function() {
               var recapCardDisplayed = false;
-              return promiseWhile(
-                function() {
-                  return !recapCardDisplayed;
-                },
-                function() {
-                  return paginator.nextButton.click()
-                    .then(function() {
-                        return mrPlayer.getCard(4);
-                    })
-                    .then(function(recapCard) {
-                        return recapCard.isDisplayed();
-                    })
-                    .then(function(isDisplayed) {
-                        recapCardDisplayed = isDisplayed;
-                    });
-                }
-              )
-              .then(function(recapCard) {
-                console.log('clicking');
-                return mrPlayer.cards[4].buttons.clickButton(0);
-              });
-            });
+              return self.parent.beforeEach()
+                  .then(function() {
+                      return promiseWhile(
+                        function() {
+                          return !recapCardDisplayed;
+                        },
+                        function() {
+                          return paginator.nextButton.click()
+                            .then(function() {
+                                return mrPlayer.getCard(4);
+                            })
+                            .then(function(recapCard) {
+                                return recapCard.isDisplayed();
+                            })
+                            .then(function(isDisplayed) {
+                                recapCardDisplayed = isDisplayed;
+                            });
+                        }
+                      )
+                      .then(function(recapCard) {
+                        console.log('clicking');
+                        return mrPlayer.cards[4].buttons.clickButton(0);
+                      });
+                  });
+            };
             it('should link to its corresponding video card', function() {
                 console.log('getting card');
-                return mrPlayer.getCard(0)
+                return self.beforeEach()
+                    .then(function() {
+                        return mrPlayer.getCard(0);
+                    })
                     .then(function(element) {
                         console.log('expecting display');
                         return expect(element.isDisplayed()).to.eventually.equal(true);
@@ -153,62 +187,73 @@
 
         describe('the nav buttons on the video player', function() {
 
+            var self = this;
+            this.beforeEach = function() {
+                return self.parent.beforeEach();
+            };
+
             describe('when the next button is clicked', function() {
 
                 this.timeout(120000); // extend the global timeout
 
                 it('should show each card', function() {
-                    return chain([0, 1, 2, 3, 4].map(function(index) {
-                        return function() {
-                            return mrPlayer.getCard(index)
-                                .then(function(card) {
-                                    console.log('Expecting card ' + index + ' to be displayed.')
-                                    return expect(card.isDisplayed()).to.eventually.equal(true);
-                                })
-                                .then(function() {
-                                    if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
-                                        console.log('Waiting 7 seconds for the ad to play');
-                                        return browser.wait(function() {
-                                            return paginator.nextButton.get()
-                                                .then(function(nextButton) {
-                                                    return nextButton.getAttribute("class")
-                                                        .then(function(classes) {
-                                                            console.log(classes);
-                                                            return (classes.indexOf("mr-pager__btn--disabled") === -1)
+                    return self.beforeEach()
+                        .then(function() {
+                            return chain([0, 1, 2, 3, 4].map(function(index) {
+                                return function() {
+                                    return mrPlayer.getCard(index)
+                                        .then(function(card) {
+                                            console.log('Expecting card ' + index + ' to be displayed.')
+                                            return expect(card.isDisplayed()).to.eventually.equal(true);
+                                        })
+                                        .then(function() {
+                                            if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
+                                                console.log('Waiting 7 seconds for the ad to play');
+                                                return browser.wait(function() {
+                                                    return paginator.nextButton.get()
+                                                        .then(function(nextButton) {
+                                                            return nextButton.getAttribute("class")
+                                                                .then(function(classes) {
+                                                                    console.log(classes);
+                                                                    return (classes.indexOf("mr-pager__btn--disabled") === -1)
+                                                                });
                                                         });
                                                 });
+                                            }
+                                            else if(mrPlayer.isAdCard(mrPlayer.cards[index+1])) {
+                                                console.log('Waiting on a card before an ad');
+                                                return browser.sleep(5000);
+                                            }
+                                        })
+                                        .then(function() {
+                                            if(index<4) {
+                                                console.log('clicking the next button');
+                                                return lightbox.nextButton.click();
+                                            }
                                         });
-                                    }
-                                    else if(mrPlayer.isAdCard(mrPlayer.cards[index+1])) {
-                                        console.log('Waiting on a card before an ad');
-                                        return browser.sleep(5000);
-                                    }
-                                })
-                                .then(function() {
-                                    if(index<4) {
-                                        console.log('clicking the next button');
-                                        return lightbox.nextButton.click();
-                                    }
-                                });
-                        };
-                    }));
+                                };
+                            })); // end - chain
+                        });
                 });
-            });
-
-            describe.skip('when the previous button is clicked', function() {
             });
 
             describe('exiting the MiniReel', function() {
-
-                beforeEach(function() {
-                    return lightbox.prevButton.click()
+                var self = this;
+                this.beforeEach = function() {
+                    return self.parent.beforeEach()
+                        .then(function() {
+                            return lightbox.prevButton.click()
+                        })
                         .then(function() {
                             return browser.switchTo().defaultContent();
                         });
-                });
+                };
 
                 it('should hide the iframe', function() {
-                    return splash.iframe.get()
+                    return self.beforeEach()
+                        .then(function() {
+                            return splash.iframe.get();
+                        })
                         .then(function(iframe) {
                             return expect(iframe.isDisplayed()).to.eventually.equal(false);
                         });
