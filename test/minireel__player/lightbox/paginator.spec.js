@@ -21,7 +21,7 @@
 
     splash.exp = article.exp;
 
-    describe.only(2, browser.browserName + ' MiniReel Player [lightbox]: Paginator', function() {
+    describe(2, browser.browserName + ' MiniReel Player [lightbox]: Paginator', function() {
 
         this.beforeEach = function() {
             return article.get()
