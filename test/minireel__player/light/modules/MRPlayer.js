@@ -37,16 +37,16 @@ module.exports = function(browser) {
         this.get = utils.getMethod(card, this.selector);
     }
 
-    function PlayButton(card) {
-        this.selector = 'button.player__play-btn';
-        this.get = utils.getMethod(card, this.selector);
-        this.click = utils.clickMethod(this, browser);
-    }
-
     function Player(card) {
-        this.selector = '.mr-player,iframe';
+        this.selector = '.player__group';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser);
+    }
+
+    function PlayButton(card) {
+      this.selector = 'button.player__playBtn';
+      this.get = utils.getMethod(card, this.selector);
+      this.click = utils.clickMethod(this, browser);
     }
 
     function Card(title, source, index) {
@@ -79,7 +79,7 @@ module.exports = function(browser) {
         get: function() {
             return self.getCard(self.cards.indexOf(this));
         }
-    }
+    };
 
     splash.exp = article.exp;
 
@@ -102,15 +102,15 @@ module.exports = function(browser) {
     ];
 
     this.isAdCard = function (card){
-        return (card instanceof AdCard);
-    }
+      return (card instanceof AdCard);
+    };
 
     this.getCard = function(cardNum) {
-        var card = this.cards[cardNum];
-        if (this.isAdCard(card)){
+        var card = self.cards[cardNum];
+        if (self.isAdCard(card)){
             return this.getAdCard();
          } else {
-             return browser.findElements({ css: 'ul.slides__list>li' })
+             return browser.findElements({ css: 'ul.cards__list>li' })
                  .then(function(lis) {
                      return lis[card.index];
                  });
@@ -118,11 +118,11 @@ module.exports = function(browser) {
     };
 
     this.getAdCard = function() {
-        return browser.findElements({ css: 'ul.slides__list>li' })
+        return browser.findElements({ css: 'ul.cards__list>li' })
             .then(function(lis) {
                 return lis[4];
             });
-    }
+    };
 
     this.get = function() {
         return splash.get()
@@ -139,4 +139,17 @@ module.exports = function(browser) {
                 return browser.switchTo().frame(iframe);
             });
     };
+
+    this.waitForAd = function() {
+      return browser.wait(function() {
+        return browser.findElement({ css: 'div.adSkip__group' })
+        .then(function(adSkip) {
+          return adSkip.isDisplayed();
+        })
+        .then(function(isDisplayed) {
+          return !isDisplayed;
+        });
+      });
+    };
+
 };

@@ -3,8 +3,6 @@ module.exports = function(browser) {
 
     var self = this,
         utils = require('../../../../utils/utils'),
-        promiseWhile = require('../../../../utils/promise').promiseWhile,
-        splashDisplayed = false,
         articleURL = 'http://demo.cinema6.com/e2e/2014/07/16/vertical-stack/';
 
     this.exp = 'e-c5ed8122f00a87';

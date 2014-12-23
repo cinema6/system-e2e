@@ -3,3 +3,4 @@
 --recursive
 --slow 2000
 --ui mocha-retry
+--bail

@@ -3,21 +3,17 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        Q = require('q'),
-        chain = require('../../../utils/promise').chain,
-        promiseWhile = require('../../../utils/promise').promiseWhile;
+        chain = require('../../../utils/promise').chain;
 
     var Article = require('./modules/Article'),
         Paginator = require('./modules/Paginator'),
         MRPlayer = require('./modules/MRPlayer'),
-        Splash = require('../modules/Splash'),
-        Lightbox = require('./modules/Lightbox');
+        Splash = require('../modules/Splash');
 
     var article = new Article(browser),
         paginator = new Paginator(browser),
         mrPlayer = new MRPlayer(browser),
-        splash = new Splash(browser),
-        lightbox = new Lightbox(browser);
+        splash = new Splash(browser);
 
     splash.exp = article.exp;
 
@@ -43,20 +39,19 @@
                             return function() {
                                 return mrPlayer.getCard(index)
                                     .then(function(card) {
-                                        console.log('Expecting card ' + index + ' to be displayed.')
+                                        console.log('Expecting card ' + index + ' to be displayed.');
                                         return expect(card.isDisplayed()).to.eventually.equal(true);
                                     })
                                     .then(function() {
                                         if(mrPlayer.isAdCard(mrPlayer.cards[index])) {
                                             console.log('Waiting for the ad to finish');
                                             return browser.wait(function() {
-                                                return paginator.nextButton.get()
-                                                    .then(function(nextButton) {
-                                                        return nextButton.getAttribute("class")
-                                                            .then(function(classes) {
-                                                                console.log(classes);
-                                                                return (classes.indexOf("mr-pager__btn--disabled") === -1)
-                                                            });
+                                                return browser.findElement({ css: 'p.adSkip__message' })
+                                                    .then(function(adSkip) {
+                                                        return adSkip.isDisplayed();
+                                                    })
+                                                    .then(function(isDisplayed) {
+                                                        return !isDisplayed;
                                                     });
                                             });
                                         }
@@ -69,7 +64,7 @@
                                         return mrPlayer.getCard(index);
                                     })
                                     .then(function(card) {
-                                        console.log('Expecting card ' + index + ' to be displayed, we did not click next yet.')
+                                        console.log('Expecting card ' + index + ' to be displayed, we did not click next yet.');
                                         return expect(card.isDisplayed()).to.eventually.equal(true);
                                     })
                                     .then(function() {
@@ -127,7 +122,7 @@
                 it('should show the card', function() {
                     return self.beforeEach()
                         .then(function() {
-                            return mrPlayer.getCard(3)
+                            return mrPlayer.getCard(3);
                         })
                         .then(function(card) {
                             return expect(card.isDisplayed()).to.eventually.equal(true);

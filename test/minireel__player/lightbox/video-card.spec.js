@@ -3,8 +3,7 @@
 
     var browser = require('../browser'),
         expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain,
-        promiseWhile = require('../../../utils/promise').promiseWhile;
+        chain = require('../../../utils/promise').chain;
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
@@ -23,7 +22,6 @@
     describe(2, browser.browserName + ' MiniReel Player [lightbox]: Video Card', function() {
         var card;
 
-        var self = this;
         this.beforeEach = function() {
             return article.get()
                 .then(function() {
@@ -102,7 +100,7 @@
                     it('should have the correct text', function() {
                         return self.beforeEach()
                             .then(function() {
-                                return card.description.get()
+                                return card.description.get();
                             })
                             .then(function(description) {
                                 return expect(description.getText()).to.eventually.equal(card.description.text);
@@ -146,30 +144,22 @@
 
             var self = this;
             this.beforeEach = function() {
-              var recapCardDisplayed = false;
               return self.parent.beforeEach()
                   .then(function() {
-                      return promiseWhile(
-                        function() {
-                          return !recapCardDisplayed;
-                        },
-                        function() {
-                          return paginator.nextButton.click()
-                            .then(function() {
-                                return mrPlayer.getCard(4);
-                            })
-                            .then(function(recapCard) {
-                                return recapCard.isDisplayed();
-                            })
-                            .then(function(isDisplayed) {
-                                recapCardDisplayed = isDisplayed;
-                            });
-                        }
-                      )
-                      .then(function(recapCard) {
-                        console.log('clicking');
-                        return mrPlayer.cards[4].buttons.clickButton(0);
-                      });
+                    console.log('skipping to the recap card');
+                    paginator.skipToRecapCard();
+                  })
+                  .then(function() {
+                      console.log('clicking the link on the recap card');
+                      return mrPlayer.cards[4].buttons.clickButton(0);
+                  })
+                  .then(function() {
+                      // Wait for the ad to become skippable
+                      return mrPlayer.waitForAd();
+                  })
+                  .then(function() {
+                      // Skip the ad
+                      return paginator.next();
                   });
             };
             it('should link to its corresponding video card', function() {
@@ -203,7 +193,7 @@
                                 return function() {
                                     return mrPlayer.getCard(index)
                                         .then(function(card) {
-                                            console.log('Expecting card ' + index + ' to be displayed.')
+                                            console.log('Expecting card ' + index + ' to be displayed.');
                                             return expect(card.isDisplayed()).to.eventually.equal(true);
                                         })
                                         .then(function() {
@@ -212,10 +202,10 @@
                                                 return browser.wait(function() {
                                                     return paginator.nextButton.get()
                                                         .then(function(nextButton) {
-                                                            return nextButton.getAttribute("class")
+                                                            return nextButton.getAttribute('class')
                                                                 .then(function(classes) {
                                                                     console.log(classes);
-                                                                    return (classes.indexOf("mr-pager__btn--disabled") === -1)
+                                                                    return (classes.indexOf('mr-pager__btn--disabled') === -1);
                                                                 });
                                                         });
                                                 });
@@ -242,7 +232,7 @@
                 this.beforeEach = function() {
                     return self.parent.beforeEach()
                         .then(function() {
-                            return lightbox.prevButton.click()
+                            return lightbox.prevButton.click();
                         })
                         .then(function() {
                             return browser.switchTo().defaultContent();

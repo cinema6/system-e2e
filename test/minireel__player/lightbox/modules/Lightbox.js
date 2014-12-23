@@ -4,25 +4,25 @@ module.exports = function(browser) {
     var utils = require('../../../../utils/utils');
 
     function CloseButton() {
-        this.selector = '.mr-ui__close';
+        this.selector = '.MiniReel__closeBtn';
         this.get = function() {
-            return browser.findElement({ css: this.selector })
+            return browser.findElement({ css: this.selector });
         };
         this.click = utils.clickMethod(this, browser);
     }
 
     function PrevButton() {
-        this.selector = '.mr-nav__prev'
+        this.selector = '.nav__btn--prev';
         this.get = function() {
-            return browser.findElement({ css: this.selector })
+            return browser.findElement({ css: this.selector });
         };
         this.click = utils.clickMethod(this, browser);
     }
 
     function NextButton() {
-        this.selector = '.mr-nav__next'
+        this.selector = '.nav__btn--next';
         this.get = function() {
-            return browser.findElement({ css: this.selector })
+            return browser.findElement({ css: this.selector });
         };
         this.click = utils.clickMethod(this, browser);
     }

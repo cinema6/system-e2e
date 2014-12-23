@@ -15,7 +15,7 @@ module.exports = function(browser) {
         var self = this;
         this.text = source ? ('via ' + source) : null;
         this.href = href || null;
-        this.selector = '.mr-card__attributes';
+        this.selector = '.card__attributes';
         this.link = {
             selector: 'a',
             get: function() {
@@ -31,28 +31,28 @@ module.exports = function(browser) {
 
     function Description(text, card) {
         this.text = text || null;
-        this.selector = '.mr-card__desc';
+        this.selector = '.card__desc';
         this.get = utils.getMethod(card, this.selector);
     }
 
     function Title(text, card) {
         this.text = text || null;
-        this.selector = 'h1.mr-card__title';
+        this.selector = 'h1.card__title';
         this.get = utils.getMethod(card, this.selector);
     }
 
     function Player(card) {
-        this.selector = '.mr-player,iframe';
+        this.selector = 'div.player__group';
         this.get = utils.getMethod(card, this.selector);
         this.click = utils.mouseClickMethod(this, browser, 2000);
         this.watchVideo = function() {
             var time = (card.duration + 5) * 1000;
             return browser.sleep(time);
-        }
+        };
     }
 
     function RecapButtons(recapCard) {
-        this.selector = 'ul.mr-recap__list button.mr-recap__imgBtn';
+        this.selector = 'ul.recap__list h1.card__title';
         this.getButton = function(i) {
             var selector = this.selector;
             return recapCard.get()
@@ -62,7 +62,7 @@ module.exports = function(browser) {
                 .then(function(elements) {
                     return elements[i];
                 });
-        }
+        };
     }
     RecapButtons.prototype = {
         clickButton: function(i) {
@@ -79,7 +79,7 @@ module.exports = function(browser) {
                 return visibleElement.click();
             });
         }
-    }
+    };
 
     function Card(title, source, duration, description, index) {
         this.title = new Title(title, this);
@@ -112,7 +112,7 @@ module.exports = function(browser) {
         get: function() {
             return self.getCard(self.cards.indexOf(this));
         }
-    }
+    };
 
     splash.exp = article.exp;
 
@@ -147,7 +147,7 @@ module.exports = function(browser) {
 
     this.isAdCard = function (card){
         return (card instanceof AdCard);
-    }
+    };
 
     this.getCard = function(cardNum) {
         // Make sure the card number argument is valid
@@ -159,7 +159,7 @@ module.exports = function(browser) {
         if (this.isAdCard(card)){
             return this.getAdCard();
         } else {
-             return browser.findElements({ css: 'ul.mr-cards__list>li' })
+             return browser.findElements({ css: 'ul.cards__list>li' })
                  .then(function(lis) {
                      return lis[card.index];
                  });
@@ -167,7 +167,7 @@ module.exports = function(browser) {
     };
 
     this.getAdCard = function() {
-        return browser.findElements({ css: 'ul.mr-cards__list>li' })
+        return browser.findElements({ css: 'ul.cards__list>li' })
             .then(function(lis) {
                 return lis[4];
             });
@@ -179,7 +179,7 @@ module.exports = function(browser) {
                 splash.click();
             })
             .then(function() {
-                return browser.findElement({ css: '.' + splash.className })
+                return browser.findElement({ css: '.' + splash.className });
             })
             .then(function(element) {
                 return element.findElement({ tagName: 'iframe' });
@@ -187,5 +187,17 @@ module.exports = function(browser) {
             .then(function(iframe) {
                 return browser.switchTo().frame(iframe);
             });
+    };
+
+    this.waitForAd = function() {
+      return browser.wait(function() {
+        return browser.findElement({ css: 'p.adSkip__message' })
+        .then(function(adSkip) {
+          return adSkip.isDisplayed();
+        })
+        .then(function(isDisplayed) {
+          return !isDisplayed;
+        });
+      });
     };
 };

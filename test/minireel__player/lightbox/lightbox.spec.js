@@ -2,18 +2,15 @@
     'use strict';
 
     var browser = require('../browser'),
-        expect = require('chai').expect,
-        chain = require('../../../utils/promise').chain;
+        expect = require('chai').expect;
 
     var Article = require('./modules/Article'),
         MRPlayer = require('./modules/MRPlayer'),
-        Paginator = require('./modules/Paginator'),
         Splash = require('../modules/Splash'),
         Lightbox = require('./modules/Lightbox');
 
     var article = new Article(browser),
         mrPlayer = new MRPlayer(browser),
-        paginator = new Paginator(browser),
         splash = new Splash(browser),
         lightbox = new Lightbox(browser);
 
@@ -85,7 +82,7 @@
                 it('should show the first video card', function() {
                     return self.beforeEach()
                         .then(function() {
-                            return mrPlayer.getCard(0);
+                          return mrPlayer.getCard(0);
                         })
                         .then(function(element) {
                             return expect(element.isDisplayed()).to.eventually.equal(true);

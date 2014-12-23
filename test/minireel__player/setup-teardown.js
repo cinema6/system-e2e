@@ -3,7 +3,7 @@
 
     var chai = require('chai'),
         chaiWebdriver = require('chai-webdriver'),
-        chaiAsPromised = require("chai-as-promised"),
+        chaiAsPromised = require('chai-as-promised'),
         browser = require('./browser');
 
     before(function() {

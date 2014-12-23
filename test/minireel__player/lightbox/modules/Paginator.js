@@ -10,7 +10,7 @@ module.exports = function(browser) {
     var self = this;
 
     this.nextButton = {
-        selector: 'button.mr-pager__next',
+        selector: 'button.pager__btn--next',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
@@ -18,7 +18,7 @@ module.exports = function(browser) {
     this.nextButton.click = utils.mouseClickMethod(this.nextButton, browser);
 
     this.prevButton = {
-        selector: 'button.mr-pager__prev',
+        selector: 'button.pager__btn--prev',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
@@ -26,7 +26,7 @@ module.exports = function(browser) {
     this.prevButton.click = utils.mouseClickMethod(this.prevButton, browser);
 
     this.thumbs = {
-        selector: '.mr-pages__list button',
+        selector: '.pages__list button',
         get: function() {
             return browser.findElements({ css: this.selector });
         }
@@ -45,6 +45,14 @@ module.exports = function(browser) {
         .then(function(thumbs) {
             return thumbs[index].click();
         });
+    };
+
+    this.skipToRecapCard = function() {
+        return self.skipTo(3);
+    };
+
+    this.next = function() {
+        return self.nextButton.click();
     };
 
     this.get = function() {

@@ -1,17 +1,16 @@
-'use strict';
-
 module.exports = function Ballot(browser, card) {
+  'use strict';
 
     var utils = require('../../../../utils/utils');
 
     function VoteWatchAgain(vote) {
-        this.selector = 'p.ballot__watch-again a';
+        this.selector = 'a.ballot__textLink--replay';
         this.get = utils.getMethod(vote, this.selector);
         this.click = utils.clickMethod(this, browser);
     }
 
     function ShowResults(vote) {
-        this.selector = 'p.ballot__results a';
+        this.selector = 'a.ballot__textLink--results';
         this.get = utils.getMethod(vote, this.selector);
         this.click = utils.clickMethod(this, browser);
     }
@@ -34,50 +33,81 @@ module.exports = function Ballot(browser, card) {
     }
 
     function VoteModule() {
+        var self = this;
         this.watchAgain = new VoteWatchAgain(this);
         this.showResults = new ShowResults(this);
         this.header = new Header(this);
         this.voteButton = new VoteButton(this);
         this.closeButton = new VoteCloseButton(this);
         this.controls = [this.watchAgain, this.showResults, this.header, this.voteButton, this.closeButton];
-        this.selector = 'ballot-vote-module.ballot-module';
+        this.selector = 'ballot-vote-module';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.mouseClickMethod(this, browser)
+
+        // This click function is used to click the vote module overlay
+        this.click = function() {
+          return self.get()
+              .then(function(voteModule) {
+                  return voteModule.getLocation();
+              })
+              .then(function(location) {
+                  var clickLocation = {
+                      x: location.x + 50,
+                      y: location.y + 50
+                  };
+                  return browser.actions()
+                      .mouseMove(clickLocation)
+                      .mouseDown()
+                      .mouseUp()
+                      .perform();
+              });
+        };
     }
 
     function ResultsWatchAgain(results) {
-        this.selector = 'p.results__watch-again a';
+        this.selector = 'a.ballot__textLink--replay';
         this.get = utils.getMethod(results, this.selector);
         this.click = utils.clickMethod(this, browser);
     }
 
     function ResultsCloseButton(results) {
-        this.selector = 'button.results__close';
+        this.selector = 'button.overlay__closeBtn';
         this.get = utils.getMethod(results, this.selector);
         this.click = utils.clickMethod(this, browser);
     }
 
     function ResultsTally(results, index) {
-        this.selector = 'li.results__item' + index + ' p.results__tally';
+        this.selector = 'div.ballot__result' + index;
         this.get = utils.getMethod(results, this.selector);
-    }
-
-    function ResultsBar(results) {
-        this.selector = 'div.results__bar1';
-        this.get = utils.getMethod(results, this.selector);
-        this.click = utils.clickMethod(this, browser);
     }
 
     function ResultsModule() {
+        var self = this;
         this.watchAgain = new ResultsWatchAgain(this);
         this.closeButton = new ResultsCloseButton(this);
         this.tally = [new ResultsTally(this, 0), new ResultsTally(this, 1)];
-        this.resultsBar = new ResultsBar(this);
-        this.controls = [this.watchAgain, this.closeButton, this.tally[0], this.tally[1], this.resultsBar];
-        this.selector = 'ballot-results-module.results-module';
+        this.controls = [this.watchAgain, this.closeButton, this.tally[0], this.tally[1]];
+        this.selector = 'ballot-results-module';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.mouseClickMethod(this, browser);
-    }
+
+        // This click function is used to click the vote module overlay
+        this.click = function() {
+            return self.get()
+                .then(function(resultsModule) {
+                    return resultsModule.getLocation();
+                })
+                .then(function(location) {
+                    var clickLocation = {
+                        x: location.x + 50,
+                        y: location.y + 50
+                    };
+                    return browser.actions()
+                        .mouseMove(clickLocation)
+                        .mouseDown()
+                        .mouseUp()
+                        .perform();
+                    });
+                };
+      }
 
     this.vote = new VoteModule();
     this.results = new ResultsModule();

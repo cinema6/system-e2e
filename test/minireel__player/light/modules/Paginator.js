@@ -5,11 +5,10 @@ module.exports = function(browser) {
         utils = require('../../../../utils/utils'),
         self = this;
 
-
     var mrPlayer = new MRPlayer(browser);
 
     this.nextButton = {
-        selector: 'button.pager__next',
+        selector: 'button.pager__btn--next',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
@@ -17,7 +16,7 @@ module.exports = function(browser) {
     this.nextButton.click = utils.clickMethod(this.nextButton, browser);
 
     this.prevButton = {
-        selector: 'button.pager__prev',
+        selector: 'button.pager__btn--prev',
         get: function() {
             return browser.findElement({ css: this.selector });
         }
@@ -46,6 +45,10 @@ module.exports = function(browser) {
             });
     };
 
+    this.skipToRecapCard = function() {
+      return self.skipTo(3);
+    };
+    
     this.get = function() {
         return mrPlayer.get();
     };
