@@ -7,7 +7,7 @@
     var runLocally = process.env.RUN_LOCALLY || 'true';
     var capabilities, browserName, serverAddress, webdriver;
 
-    if(runLocally === 'true'){
+    if (runLocally === 'true') {
         console.log('Starting Local Tests');
 
         // Start the selenium server
@@ -21,18 +21,18 @@
         webdriver = require('selenium-webdriver');
 
         browser = module.exports = new webdriver.Builder()
-            .withCapabilities(webdriver.Capabilities.chrome())
-            .build();
+        .withCapabilities(webdriver.Capabilities.chrome())
+        .build();
         browser.browserName = 'chrome';
 
-    }else{
+    } else {
         browserName = process.env.BROWSER_NAME || 'firefox';
 
         // Add credentials to the capabilities
         capabilities = config.browserStackOptions[browserName];
         capabilities['browserstack.user'] = process.env.BROWSERSTACK_USER;
         capabilities['browserstack.key'] = process.env.BROWSERSTACK_KEY;
-        if(process.env.BROWSERSTACK_DEBUG === 'true') {
+        if (process.env.BROWSERSTACK_DEBUG === 'true') {
             capabilities['browserstack.debug'] = true;
         }
 
@@ -40,9 +40,9 @@
         webdriver = require('browserstack-webdriver');
 
         browser = module.exports = new webdriver.Builder()
-            .usingServer(serverAddress)
-            .withCapabilities(capabilities)
-            .build();
+        .usingServer(serverAddress)
+        .withCapabilities(capabilities)
+        .build();
         browser.browserName = browserName;
     }
 

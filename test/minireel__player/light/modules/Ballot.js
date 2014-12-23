@@ -1,5 +1,5 @@
 module.exports = function Ballot(browser, card) {
-  'use strict';
+    'use strict';
 
     var utils = require('../../../../utils/utils');
 
@@ -45,21 +45,21 @@ module.exports = function Ballot(browser, card) {
 
         // This click function is used to click the vote module overlay
         this.click = function() {
-          return self.get()
-              .then(function(voteModule) {
-                  return voteModule.getLocation();
-              })
-              .then(function(location) {
-                  var clickLocation = {
-                      x: location.x + 50,
-                      y: location.y + 50
-                  };
-                  return browser.actions()
-                      .mouseMove(clickLocation)
-                      .mouseDown()
-                      .mouseUp()
-                      .perform();
-              });
+            return self.get()
+            .then(function(voteModule) {
+                return voteModule.getLocation();
+            })
+            .then(function(location) {
+                var clickLocation = {
+                    x: location.x + 50,
+                    y: location.y + 50
+                };
+                return browser.actions()
+                .mouseMove(clickLocation)
+                .mouseDown()
+                .mouseUp()
+                .perform();
+            });
         };
     }
 
@@ -92,22 +92,22 @@ module.exports = function Ballot(browser, card) {
         // This click function is used to click the vote module overlay
         this.click = function() {
             return self.get()
-                .then(function(resultsModule) {
-                    return resultsModule.getLocation();
-                })
-                .then(function(location) {
-                    var clickLocation = {
-                        x: location.x + 50,
-                        y: location.y + 50
-                    };
-                    return browser.actions()
-                        .mouseMove(clickLocation)
-                        .mouseDown()
-                        .mouseUp()
-                        .perform();
-                    });
+            .then(function(resultsModule) {
+                return resultsModule.getLocation();
+            })
+            .then(function(location) {
+                var clickLocation = {
+                    x: location.x + 50,
+                    y: location.y + 50
                 };
-      }
+                return browser.actions()
+                .mouseMove(clickLocation)
+                .mouseDown()
+                .mouseUp()
+                .perform();
+            });
+        };
+    }
 
     this.vote = new VoteModule();
     this.results = new ResultsModule();

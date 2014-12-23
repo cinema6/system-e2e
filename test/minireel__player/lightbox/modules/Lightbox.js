@@ -6,7 +6,9 @@ module.exports = function(browser) {
     function CloseButton() {
         this.selector = '.MiniReel__closeBtn';
         this.get = function() {
-            return browser.findElement({ css: this.selector });
+            return browser.findElement({
+                css: this.selector
+            });
         };
         this.click = utils.clickMethod(this, browser);
     }
@@ -14,7 +16,9 @@ module.exports = function(browser) {
     function PrevButton() {
         this.selector = '.nav__btn--prev';
         this.get = function() {
-            return browser.findElement({ css: this.selector });
+            return browser.findElement({
+                css: this.selector
+            });
         };
         this.click = utils.clickMethod(this, browser);
     }
@@ -22,7 +26,9 @@ module.exports = function(browser) {
     function NextButton() {
         this.selector = '.nav__btn--next';
         this.get = function() {
-            return browser.findElement({ css: this.selector });
+            return browser.findElement({
+                css: this.selector
+            });
         };
         this.click = utils.clickMethod(this, browser);
     }

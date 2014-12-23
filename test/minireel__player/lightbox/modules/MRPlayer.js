@@ -4,10 +4,10 @@ module.exports = function(browser) {
     var utils = require('../../../../utils/utils');
 
     var Splash = require('../../modules/Splash'),
-        Article = require('./Article');
+    Article = require('./Article');
 
     var splash = new Splash(browser),
-        article = new Article(browser);
+    article = new Article(browser);
 
     var self = this;
 
@@ -21,9 +21,11 @@ module.exports = function(browser) {
             get: function() {
                 var selector = this.selector;
                 return self.get()
-                    .then(function(source) {
-                        return source.findElement({ css: selector });
+                .then(function(source) {
+                    return source.findElement({
+                        css: selector
                     });
+                });
             }
         };
         this.get = utils.getMethod(card, this.selector);
@@ -56,12 +58,14 @@ module.exports = function(browser) {
         this.getButton = function(i) {
             var selector = this.selector;
             return recapCard.get()
-                .then(function(element) {
-                    return element.findElements({ css: selector });
-                })
-                .then(function(elements) {
-                    return elements[i];
+            .then(function(element) {
+                return element.findElements({
+                    css: selector
                 });
+            })
+            .then(function(elements) {
+                return elements[i];
+            });
         };
     }
     RecapButtons.prototype = {
@@ -70,10 +74,10 @@ module.exports = function(browser) {
             var visibleElement;
             return browser.wait(function() {
                 return self.getButton(i)
-                    .then(function(e) {
-                        visibleElement = e;
-                        return e.isDisplayed();
-                    });
+                .then(function(e) {
+                    visibleElement = e;
+                    return e.isDisplayed();
+                });
             })
             .then(function() {
                 return visibleElement.click();
@@ -117,35 +121,32 @@ module.exports = function(browser) {
     splash.exp = article.exp;
 
     this.cards = [
-        new Card('True Facts About The Mantis Shrimp',
-            {
-                source: 'YouTube',
-                href: 'https://www.youtube.com/watch?v=F5FEj9U-CJM'
-            },
-            30,
-            'Here we have true facts about the mantis shrimp.',
-            0),
-        new Card('Mantis Shrimp Solves a Rubiks Cube',
-            {
-                source: 'YouTube',
-                href: 'https://www.youtube.com/watch?v=0uTdTRXNdEY'
-            },
-            40,
-            'This highly intelligent stomatopod does the unthinkable and solves a Rubiks cube in record time.',
-            1),
-        new AdCard(),
-        new Card('Mantis Shrimp Punches Hole in Clam',
-            {
-                source: 'YouTube',
-                href: 'https://www.youtube.com/watch?v=i-ahuZEvWH8'
-            },
-            30,
-            '...',
-            2),
-        new RecapCard(3)
+    new Card('True Facts About The Mantis Shrimp', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=F5FEj9U-CJM'
+    },
+    30,
+    'Here we have true facts about the mantis shrimp.',
+    0),
+    new Card('Mantis Shrimp Solves a Rubiks Cube', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=0uTdTRXNdEY'
+    },
+    40,
+    'This highly intelligent stomatopod does the unthinkable and solves a Rubiks cube in record time.',
+    1),
+    new AdCard(),
+    new Card('Mantis Shrimp Punches Hole in Clam', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=i-ahuZEvWH8'
+    },
+    30,
+    '...',
+    2),
+    new RecapCard(3)
     ];
 
-    this.isAdCard = function (card){
+    this.isAdCard = function(card) {
         return (card instanceof AdCard);
     };
 
@@ -156,48 +157,58 @@ module.exports = function(browser) {
         }
         // Get the requested card
         var card = this.cards[cardNum];
-        if (this.isAdCard(card)){
+        if (this.isAdCard(card)) {
             return this.getAdCard();
         } else {
-             return browser.findElements({ css: 'ul.cards__list>li' })
-                 .then(function(lis) {
-                     return lis[card.index];
-                 });
+            return browser.findElements({
+                css: 'ul.cards__list>li'
+            })
+            .then(function(lis) {
+                return lis[card.index];
+            });
         }
     };
 
     this.getAdCard = function() {
-        return browser.findElements({ css: 'ul.cards__list>li' })
-            .then(function(lis) {
-                return lis[4];
-            });
+        return browser.findElements({
+            css: 'ul.cards__list>li'
+        })
+        .then(function(lis) {
+            return lis[4];
+        });
     };
 
     this.get = function() {
         return splash.get()
-            .then(function() {
-                splash.click();
-            })
-            .then(function() {
-                return browser.findElement({ css: '.' + splash.className });
-            })
-            .then(function(element) {
-                return element.findElement({ tagName: 'iframe' });
-            })
-            .then(function(iframe) {
-                return browser.switchTo().frame(iframe);
+        .then(function() {
+            splash.click();
+        })
+        .then(function() {
+            return browser.findElement({
+                css: '.' + splash.className
             });
+        })
+        .then(function(element) {
+            return element.findElement({
+                tagName: 'iframe'
+            });
+        })
+        .then(function(iframe) {
+            return browser.switchTo().frame(iframe);
+        });
     };
 
     this.waitForAd = function() {
-      return browser.wait(function() {
-        return browser.findElement({ css: 'p.adSkip__message' })
-        .then(function(adSkip) {
-          return adSkip.isDisplayed();
-        })
-        .then(function(isDisplayed) {
-          return !isDisplayed;
+        return browser.wait(function() {
+            return browser.findElement({
+                css: 'p.adSkip__message'
+            })
+            .then(function(adSkip) {
+                return adSkip.isDisplayed();
+            })
+            .then(function(isDisplayed) {
+                return !isDisplayed;
+            });
         });
-      });
     };
 };

@@ -5,13 +5,13 @@
 
 'use strict';
 
-var BrowserStack = require( "browserstack" ),
-    spawn = require('child_process').spawn,
-    fs = require('fs'),
-    Q = require('q'),
-    Queue = require('madlib-promise-queue'),
-    chain = require('./utils/promise').chain,
-    config = require('./config.json');
+var BrowserStack = require("browserstack"),
+spawn = require('child_process').spawn,
+fs = require('fs'),
+Q = require('q'),
+Queue = require('madlib-promise-queue'),
+chain = require('./utils/promise').chain,
+config = require('./config.json');
 
 var secrets;
 
@@ -19,12 +19,14 @@ var secrets;
 if (fs.existsSync('./.browserstack_secrets.json')) {
     secrets = require('./.browserstack_secrets.json');
 } else {
-    secrets = {"browserstack":{}};
+    secrets = {
+        "browserstack": {}
+    };
 }
 
 // Aquire the neccessary BrowserStack credentials
 var browserStackUser = process.env.BROWSERSTACK_USER || secrets.browserstack.user,
-    browserStackKey = process.env.BROWSERSTACK_KEY || secrets.browserstack.key;
+browserStackKey = process.env.BROWSERSTACK_KEY || secrets.browserstack.key;
 
 // Setup the connection to BrowserStack to monitor running workers
 var client = BrowserStack.createClient({
@@ -41,12 +43,12 @@ var browsers = process.env.BROWSERS || 'firefox, chrome, explorer';
 console.log('using browsers:', browsers);
 var browserList = browsers.split(',');
 browserList = browserList.map(function(browser) {
-    return browser.replace( /\s/g, "").toLowerCase();
+    return browser.replace(/\s/g, "").toLowerCase();
 });
 
 // Check to see if the specified browsers exist in the config file
 browserList.forEach(function(browserName) {
-    if(!config.browserStackOptions[browserName]) {
+    if (!config.browserStackOptions[browserName]) {
         console.error('ERROR:', browserName, 'not defined in config file');
         process.exit(1);
     }
@@ -56,7 +58,7 @@ browserList.forEach(function(browserName) {
 getStatus()
 .then(function(status) {
     // Make sure there are no sessions currently running
-    if(status.running_sessions > 0) {
+    if (status.running_sessions > 0) {
         throw new Error('ERROR: there are sessions currently running in BrowserStack');
     }
 
@@ -67,26 +69,26 @@ getStatus()
     var queue = new Queue(status.sessions_limit);
     return Q.allSettled(browserList.map(function(browserName) {
         return queue.ready()
-            .then(function() {
-                console.log(browserName.toUpperCase() + ': Starting Tests');
-                return runTestsForBrowser(browserName)
-            })
-            .then(function() {
-                console.log(browserName.toUpperCase() + ': Tests Complete');
-                queue.done();
-            })
-            .catch(function(error) {
-                console.log(browserName.toUpperCase() + ' ' + error);
-                queue.done();
-                throw new Error(error);
-            })
+        .then(function() {
+            console.log(browserName.toUpperCase() + ': Starting Tests');
+            return runTestsForBrowser(browserName)
+        })
+        .then(function() {
+            console.log(browserName.toUpperCase() + ': Tests Complete');
+            queue.done();
+        })
+        .catch(function(error) {
+            console.log(browserName.toUpperCase() + ' ' + error);
+            queue.done();
+            throw new Error(error);
+        })
     }));
 
 })
 .then(function(results) {
 
     // Check the results of each promise in the promise queue
-    results.forEach(function (result) {
+    results.forEach(function(result) {
         if (result.state === "rejected") {
             throw new Error(result.state.reason);
         }
@@ -106,9 +108,9 @@ getStatus()
 function getStatus() {
     var deferred = Q.defer();
     client.getApiStatus(function(error, status) {
-        if(error){
+        if (error) {
             deferred.reject(new Error(error));
-        }else{
+        } else {
             deferred.resolve(status);
         }
     });
@@ -134,10 +136,10 @@ function runTestsForBrowser(browserName) {
         }
     };
     var child = spawn(cmd, args, options);
-    child.on('exit', function (code) {
+    child.on('exit', function(code) {
         Q.delay(10000)
         .then(function() {
-            if(code === 0) {
+            if (code === 0) {
                 deferred.resolve();
             } else {
                 deferred.reject(new Error('Mocha process exited with error code ' + code));
@@ -149,5 +151,5 @@ function runTestsForBrowser(browserName) {
 
 // Log the status code when the process ends
 process.on('exit', function(code) {
-  console.log('process ended with code ', code);
+    console.log('process ended with code ', code);
 });

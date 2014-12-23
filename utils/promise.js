@@ -11,8 +11,9 @@
 
     exports.promiseWhile = function(condition, body) {
         var deferred = Q.defer();
+
         function loop() {
-        if (!condition()) return deferred.resolve();
+            if (!condition()) return deferred.resolve();
             Q.when(body(), loop, deferred.reject);
         }
         Q.nextTick(loop);

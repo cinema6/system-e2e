@@ -7,10 +7,10 @@ module.exports = function(browser) {
 
     this.get = function() {
         return browser.get(articleURL)
-            .then(function() {
-                return browser.executeScript(function() {
-                    window.scrollBy(0, 200);
-                });
+        .then(function() {
+            return browser.executeScript(function() {
+                window.scrollBy(0, 200);
             });
+        });
     };
 };
