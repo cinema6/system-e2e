@@ -11,6 +11,7 @@ fs = require('fs'),
 Q = require('q'),
 Queue = require('madlib-promise-queue'),
 chain = require('./utils/promise').chain,
+promiseWhile = require('./utils/promise').promiseWhile,
 config = require('./config.json');
 
 var secrets;
@@ -54,12 +55,19 @@ browserList.forEach(function(browserName) {
     }
 });
 
+// Array of players to test
+var playerList = ['light', 'lightbox'];
+
+// Record the starting time of the tests
+var startDate = new Date();
+var startTime = startDate.getTime();
+
 // Run the tests for all the specified browsers
 getStatus()
 .then(function(status) {
     // Make sure there are no sessions currently running
     if (status.running_sessions > 0) {
-        throw new Error('ERROR: there are sessions currently running in BrowserStack');
+        throw new Error('ERROR: there are ' + status.running_sessions + ' sessions currently running in BrowserStack');
     }
 
     // Output the maximum number of concurrent sessions allowed
@@ -68,20 +76,23 @@ getStatus()
     // Setup up the promise queue
     var queue = new Queue(status.sessions_limit);
     return Q.allSettled(browserList.map(function(browserName) {
-        return queue.ready()
-        .then(function() {
-            console.log(browserName.toUpperCase() + ': Starting Tests');
-            return runTestsForBrowser(browserName)
-        })
-        .then(function() {
-            console.log(browserName.toUpperCase() + ': Tests Complete');
-            queue.done();
-        })
-        .catch(function(error) {
-            console.log(browserName.toUpperCase() + ' ' + error);
-            queue.done();
-            throw new Error(error);
-        })
+        playerList.map(function(playerName) {
+            return queue.ready()
+            .then(waitForSpot)
+            .then(function() {
+                console.log(browserName.toUpperCase() + ' ' + playerName.toUpperCase() + ': Starting Tests');
+                return runTestsForBrowser(browserName, playerName);
+            })
+            .then(function() {
+                console.log(browserName.toUpperCase() + ' ' + playerName.toUpperCase() + ': Tests Complete');
+                queue.done();
+            })
+            .catch(function(error) {
+                console.log(browserName.toUpperCase() + ' ' + error);
+                queue.done();
+                throw new Error(error);
+            })
+        });
     }));
 
 })
@@ -117,12 +128,29 @@ function getStatus() {
     return deferred.promise;
 }
 
+// Waits until a spot frees up to run tests on another browser
+function waitForSpot() {
+    var spotAvailable = false;
+    return promiseWhile(function() {
+        return !spotAvailable;
+    }, function() {
+        return getStatus()
+        .then(function(status) {
+            if (status.running_sessions < status.sessions_limit) {
+                spotAvailable = true;
+            } else {
+                return Q.delay(10000);
+            }
+        });
+    });
+}
+
 // Spawn a mocha child process. Resolving this promise means that BrowserStack
 //  is ready for a new test to begin to run.
-function runTestsForBrowser(browserName) {
+function runTestsForBrowser(browserName, playerName) {
     var deferred = Q.defer();
     var cmd = 'mocha';
-    var args = [];
+    var args = ['test/minireel__player/setup-teardown.js', 'test/minireel__player/' + playerName];
     var options = {
         stdio: 'inherit',
         env: {
@@ -137,19 +165,21 @@ function runTestsForBrowser(browserName) {
     };
     var child = spawn(cmd, args, options);
     child.on('exit', function(code) {
-        Q.delay(10000)
-        .then(function() {
-            if (code === 0) {
-                deferred.resolve();
-            } else {
-                deferred.reject(new Error('Mocha process exited with error code ' + code));
-            }
-        });
+        if (code === 0) {
+            deferred.resolve();
+        } else {
+            deferred.reject(new Error('Mocha process exited with error code ' + code));
+        }
     });
     return deferred.promise;
 }
 
 // Log the status code when the process ends
 process.on('exit', function(code) {
+    var endDate = new Date();
+    var endTime = endDate.getTime();
+    var totalTime = endTime - startTime;
+    var totalMinutes = totalTime / 1000 / 60;
+    console.log('tests took ' + totalMinutes + ' minutes');
     console.log('process ended with code ', code);
 });

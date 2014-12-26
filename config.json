@@ -19,8 +19,7 @@
             "browser_version": "11.0",
             "os": "Windows",
             "os_version": "8.1",
-            "resolution": "1280x1024",
-            "ignoreProtectedModeSettings": false
+            "resolution": "1280x1024"
         },
         "firefox": {
             "browserName": "firefox",

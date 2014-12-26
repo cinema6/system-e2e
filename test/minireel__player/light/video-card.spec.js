@@ -103,7 +103,7 @@
                             });
                         };
 
-                        it('should be shown', function() {
+                        it('the play button should be shown', function() {
                             return self.beforeEach()
                             .then(function() {
                                 return card.playButton.get()

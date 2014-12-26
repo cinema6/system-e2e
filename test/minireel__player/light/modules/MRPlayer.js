@@ -40,11 +40,9 @@ module.exports = function(browser) {
     }
 
     function Player(card) {
-        //this.selector = '.player__group';
-        this.selector = 'youtube-player.playerBox';
+        this.selector = '.player__group';
         this.get = utils.getMethod(card, this.selector);
-        //this.click = utils.mouseClickMethod(this, browser);
-        this.click = utils.clickMethod(this, browser);
+        this.click = utils.mouseClickMethod(this, browser);
     }
 
     function PlayButton(card) {

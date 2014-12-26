@@ -27,6 +27,7 @@
                 // Click the play button
                 return card.player.click()
                 .then(function() {
+                    // Wait until the play button is no longer displayed
                     return browser.wait(function() {
                         return card.playButton.get()
                         .then(function(playButton) {
