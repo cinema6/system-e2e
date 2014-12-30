@@ -42,7 +42,7 @@ module.exports = function(browser) {
             .then(function(thumbs) {
                 return thumbs[index].isDisplayed();
             });
-        })
+        }, 10000)
         .then(function() {
             return self.thumbs.get();
         })

@@ -180,6 +180,6 @@ process.on('exit', function(code) {
     var endTime = endDate.getTime();
     var totalTime = endTime - startTime;
     var totalMinutes = totalTime / 1000 / 60;
-    console.log('tests took ' + totalMinutes + ' minutes');
+    console.log('Tests completed in ' + totalMinutes.toFixed(2) + ' minutes');
     console.log('process ended with code ', code);
 });

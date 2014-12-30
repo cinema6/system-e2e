@@ -29,7 +29,7 @@
                         console.log(error);
                         return false;
                     });
-                });
+                }, 10000);
             });
         };
 

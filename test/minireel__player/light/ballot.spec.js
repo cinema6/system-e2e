@@ -306,7 +306,7 @@
                                     .then(function(isDisplayed) {
                                         return !isDisplayed;
                                     });
-                                });
+                                }, 5000);
                             })
                             .then(function() {
                                 return card.playButton.click();

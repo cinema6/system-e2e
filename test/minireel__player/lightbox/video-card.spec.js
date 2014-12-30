@@ -201,7 +201,7 @@
                                                     return (classes.indexOf('mr-pager__btn--disabled') === -1);
                                                 });
                                             });
-                                        });
+                                        }, 15000);
                                     } else if (mrPlayer.isAdCard(mrPlayer.cards[index + 1])) {
                                         return browser.sleep(5000);
                                     }

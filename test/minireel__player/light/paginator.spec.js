@@ -50,7 +50,7 @@
                                         .then(function(isDisplayed) {
                                             return !isDisplayed;
                                         });
-                                    });
+                                    }, 15000);
                                 } else if (mrPlayer.isAdCard(mrPlayer.cards[index + 1])) {
                                     return browser.sleep(10000);
                                 }

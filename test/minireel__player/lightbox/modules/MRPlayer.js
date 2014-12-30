@@ -78,7 +78,7 @@ module.exports = function(browser) {
                     visibleElement = e;
                     return e.isDisplayed();
                 });
-            })
+            }, 10000)
             .then(function() {
                 return visibleElement.click();
             });
@@ -209,6 +209,6 @@ module.exports = function(browser) {
             .then(function(isDisplayed) {
                 return !isDisplayed;
             });
-        });
+        }, 15000);
     };
 };

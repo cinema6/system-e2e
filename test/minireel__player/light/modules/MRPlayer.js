@@ -161,7 +161,7 @@ module.exports = function(browser) {
             .then(function(isDisplayed) {
                 return !isDisplayed;
             });
-        });
+        }, 15000);
     };
 
 };

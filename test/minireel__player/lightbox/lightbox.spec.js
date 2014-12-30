@@ -18,8 +18,6 @@
 
     describe(2, browser.browserName + ' MiniReel Player [lightbox]: Lightbox', function() {
 
-        var times = 0;
-
         this.beforeEach = function() {
             return article.get();
         };
@@ -36,8 +34,6 @@
             };
 
             it('should hide the iframe', function() {
-                times ++;
-                console.log(times + ' <- the iteration of trying this test');
                 return self.beforeEach()
                 .then(function() {
                     return splash.iframe.get();
@@ -71,7 +67,7 @@
                             .thenCatch(function() {
                                 return false;
                             });
-                        });
+                        }, 10000);
                     })
                     .then(function() {
                         return splash.iframe.get();
