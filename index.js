@@ -174,7 +174,6 @@ function runTestsForBrowser(browserName, playerName) {
     };
     var child = spawn(cmd, args, options);
     child.on('exit', function(code) {
-        code = 8;
         if (code === 0) {
             deferred.resolve();
         } else {
