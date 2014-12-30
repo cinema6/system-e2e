@@ -18,9 +18,7 @@
         var self = this;
         this.beforeEach = function() {
             return article.get()
-            .then(function() {
-                return mrPlayer.get();
-            })
+            .then(mrPlayer.get)
             .then(function() {
                 card = mrPlayer.cards[0];
                 ballot = card.ballot;

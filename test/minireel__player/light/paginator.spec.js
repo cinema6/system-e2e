@@ -36,12 +36,10 @@
                         return function() {
                             return mrPlayer.getCard(index)
                             .then(function(card) {
-                                console.log('expecting card ' + index);
                                 return expect(card.isDisplayed()).to.eventually.equal(true);
                             })
                             .then(function() {
                                 if (mrPlayer.isAdCard(mrPlayer.cards[index])) {
-                                    console.log('waiting for ad to finish');
                                     return browser.wait(function() {
                                         return browser.findElement({
                                             css: 'div.adSkip__group'
@@ -54,13 +52,11 @@
                                         });
                                     });
                                 } else if (mrPlayer.isAdCard(mrPlayer.cards[index + 1])) {
-                                    console.log('loading ad');
                                     return browser.sleep(10000);
                                 }
                             })
                             .then(function() {
                                 if (index < 5) {
-                                    console.log('clicking next');
                                     return paginator.nextButton.click();
                                 }
                             });

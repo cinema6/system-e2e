@@ -146,11 +146,9 @@
             this.beforeEach = function() {
                 return self.parent.beforeEach()
                 .then(function() {
-                    console.log('skipping to the recap card');
                     paginator.skipToRecapCard();
                 })
                 .then(function() {
-                    console.log('clicking the link on the recap card');
                     return mrPlayer.cards[4].buttons.clickButton(0);
                 })
                 .then(function() {
@@ -163,13 +161,11 @@
                 });
             };
             it('should link to its corresponding video card', function() {
-                console.log('getting card');
                 return self.beforeEach()
                 .then(function() {
                     return mrPlayer.getCard(0);
                 })
                 .then(function(element) {
-                    console.log('expecting display');
                     return expect(element.isDisplayed()).to.eventually.equal(true);
                 });
             });
@@ -193,30 +189,25 @@
                             return function() {
                                 return mrPlayer.getCard(index)
                                 .then(function(card) {
-                                    console.log('Expecting card ' + index + ' to be displayed.');
                                     return expect(card.isDisplayed()).to.eventually.equal(true);
                                 })
                                 .then(function() {
                                     if (mrPlayer.isAdCard(mrPlayer.cards[index])) {
-                                        console.log('Waiting 7 seconds for the ad to play');
                                         return browser.wait(function() {
                                             return paginator.nextButton.get()
                                             .then(function(nextButton) {
                                                 return nextButton.getAttribute('class')
                                                 .then(function(classes) {
-                                                    console.log(classes);
                                                     return (classes.indexOf('mr-pager__btn--disabled') === -1);
                                                 });
                                             });
                                         });
                                     } else if (mrPlayer.isAdCard(mrPlayer.cards[index + 1])) {
-                                        console.log('Waiting on a card before an ad');
                                         return browser.sleep(5000);
                                     }
                                 })
                                 .then(function() {
                                     if (index < 4) {
-                                        console.log('clicking the next button');
                                         return lightbox.nextButton.click();
                                     }
                                 });

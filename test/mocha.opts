@@ -1,4 +1,4 @@
---reporter spec
+--reporter mocha-jenkins-reporter
 --timeout 60000
 --recursive
 --slow 2000

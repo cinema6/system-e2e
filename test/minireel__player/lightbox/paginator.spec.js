@@ -22,7 +22,6 @@
         this.beforeEach = function() {
             return article.get()
             .then(function() {
-                console.log('Got the article');
                 return paginator.get();
             });
         };
@@ -39,12 +38,10 @@
                         return function() {
                             return mrPlayer.getCard(index)
                             .then(function(card) {
-                                console.log('Expecting card ' + index + ' to be displayed.');
                                 return expect(card.isDisplayed()).to.eventually.equal(true);
                             })
                             .then(function() {
                                 if (mrPlayer.isAdCard(mrPlayer.cards[index])) {
-                                    console.log('Waiting for the ad to finish');
                                     return browser.wait(function() {
                                         return browser.findElement({
                                             css: 'p.adSkip__message'
@@ -57,7 +54,6 @@
                                         });
                                     });
                                 } else if (mrPlayer.isAdCard(mrPlayer.cards[index + 1])) {
-                                    console.log('Waiting on a card before an ad');
                                     return browser.sleep(5000);
                                 }
                             })
@@ -65,12 +61,10 @@
                                 return mrPlayer.getCard(index);
                             })
                             .then(function(card) {
-                                console.log('Expecting card ' + index + ' to be displayed, we did not click next yet.');
                                 return expect(card.isDisplayed()).to.eventually.equal(true);
                             })
                             .then(function() {
                                 if (index < 4) {
-                                    console.log('clicking the next button');
                                     return paginator.nextButton.click();
                                 }
                             });
@@ -92,7 +86,6 @@
                     .then(function() {
                         return paginator.skipTo(1)
                         .then(function() {
-                            console.log('loading the ad');
                             return browser.sleep(5000);
                         })
                         .then(function() {
