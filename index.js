@@ -169,7 +169,7 @@ function runTestsForBrowser(browserName, playerName) {
             BROWSERSTACK_USER: browserStackUser,
             BROWSERSTACK_KEY: browserStackKey,
             BROWSERSTACK_DEBUG: process.env.BROWSERSTACK_DEBUG,
-            JUNIT_REPORT_PATH: ('./reports/' + browserName + '_report.xml')
+            JUNIT_REPORT_PATH: ('./reports/' + browserName + '_' + playerName + '_report.xml')
         }
     };
     var child = spawn(cmd, args, options);
