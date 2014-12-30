@@ -58,6 +58,17 @@ browserList.forEach(function(browserName) {
 // Array of players to test
 var playerList = ['light', 'lightbox'];
 
+// Array of tests to be run
+var testList = [];
+browserList.forEach(function(browser) {
+    playerList.forEach(function(player) {
+        testList.push({
+            browser: browser,
+            player: player
+        });
+    });
+});
+
 // Record the starting time of the tests
 var startDate = new Date();
 var startTime = startDate.getTime();
@@ -75,23 +86,21 @@ getStatus()
 
     // Setup up the promise queue
     var queue = new Queue(status.sessions_limit);
-    return Q.allSettled(browserList.map(function(browserName) {
-        playerList.map(function(playerName) {
-            return queue.ready()
-            .then(waitForSpot)
-            .then(function() {
-                console.log(browserName.toUpperCase() + ' ' + playerName.toUpperCase() + ': Starting Tests');
-                return runTestsForBrowser(browserName, playerName);
-            })
-            .then(function() {
-                console.log(browserName.toUpperCase() + ' ' + playerName.toUpperCase() + ': Tests Complete');
-                queue.done();
-            })
-            .catch(function(error) {
-                console.log(browserName.toUpperCase() + ' ' + error);
-                queue.done();
-                throw new Error(error);
-            })
+    return Q.allSettled(testList.map(function(test) {
+        return queue.ready()
+        .then(waitForSpot)
+        .then(function() {
+            console.log(test.browser.toUpperCase() + ' ' + test.player.toUpperCase() + ': Starting Tests');
+            return runTestsForBrowser(test.browser, test.player);
+        })
+        .then(function() {
+            console.log(test.browser.toUpperCase() + ' ' + test.player.toUpperCase() + ': Tests Complete');
+            queue.done();
+        })
+        .catch(function(error) {
+            console.log(test.browser.toUpperCase() + ' ' + error);
+            queue.done();
+            throw new Error(error);
         });
     }));
 
@@ -165,6 +174,7 @@ function runTestsForBrowser(browserName, playerName) {
     };
     var child = spawn(cmd, args, options);
     child.on('exit', function(code) {
+        code = 8;
         if (code === 0) {
             deferred.resolve();
         } else {
@@ -176,10 +186,12 @@ function runTestsForBrowser(browserName, playerName) {
 
 // Log the status code when the process ends
 process.on('exit', function(code) {
-    var endDate = new Date();
-    var endTime = endDate.getTime();
-    var totalTime = endTime - startTime;
-    var totalMinutes = totalTime / 1000 / 60;
-    console.log('Tests completed in ' + totalMinutes.toFixed(2) + ' minutes');
+    if (code === 0) {
+        var endDate = new Date();
+        var endTime = endDate.getTime();
+        var totalTime = endTime - startTime;
+        var totalMinutes = totalTime / 1000 / 60;
+        console.log('Tests completed in ' + totalMinutes.toFixed(2) + ' minutes');
+    }
     console.log('process ended with code ', code);
 });
