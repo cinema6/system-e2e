@@ -2,4 +2,3 @@ node_modules
 *~
 *.xml
 test/selenium-server-standalone-*.jar
-

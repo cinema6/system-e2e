@@ -4,11 +4,11 @@ module.exports = function(browser) {
     var utils = require('../../../../utils/utils');
 
     var Splash = require('../../modules/Splash'),
-        Article = require('./Article'),
-        Ballot = require('./Ballot');
+    Article = require('./Article'),
+    Ballot = require('./Ballot');
 
     var splash = new Splash(browser),
-        article = new Article(browser);
+    article = new Article(browser);
 
     var self = this;
 
@@ -23,9 +23,11 @@ module.exports = function(browser) {
                 var selector = this.selector;
 
                 return self.get()
-                    .then(function(source) {
-                        return source.findElement({ css: selector });
+                .then(function(source) {
+                    return source.findElement({
+                        css: selector
                     });
+                });
             }
         };
         this.get = utils.getMethod(card, this.selector);
@@ -37,16 +39,16 @@ module.exports = function(browser) {
         this.get = utils.getMethod(card, this.selector);
     }
 
-    function PlayButton(card) {
-        this.selector = 'button.player__play-btn';
+    function Player(card) {
+        this.selector = '.player__group';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.clickMethod(this, browser, 2000);
+        this.click = utils.mouseClickMethod(this, browser);
     }
 
-    function Player(card) {
-        this.selector = '.mr-player,iframe';
+    function PlayButton(card) {
+        this.selector = 'button.player__playBtn';
         this.get = utils.getMethod(card, this.selector);
-        this.click = utils.mouseClickMethod(this, browser, 2000);
+        this.click = utils.clickMethod(this, browser);
     }
 
     function Card(title, source, index) {
@@ -79,60 +81,87 @@ module.exports = function(browser) {
         get: function() {
             return self.getCard(self.cards.indexOf(this));
         }
-    }
+    };
 
     splash.exp = article.exp;
 
     this.cards = [
-        new Card('Sergio Flores', {
-            source: 'YouTube',
-            href: 'https://www.youtube.com/watch?v=GaoLU6zKaws'
-        },0),
-        new AdCard(),
-        new Card('Epic Sax Guy', {
-            source: 'YouTube',
-            href: 'https://www.youtube.com/watch?v=gy1B3agGNxw'
-        },1),
-        new AdCard(),
-        new Card('Sunstroke Project', {
-            source: 'YouTube',
-            href: 'https://www.youtube.com/watch?v=UQBc2RcbTHo'
-        },2),
-        new RecapCard(3)
+    new Card('Sergio Flores', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=GaoLU6zKaws'
+    }, 0),
+    new AdCard(),
+    new Card('Epic Sax Guy', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=gy1B3agGNxw'
+    }, 1),
+    new AdCard(),
+    new Card('Sunstroke Project', {
+        source: 'YouTube',
+        href: 'https://www.youtube.com/watch?v=UQBc2RcbTHo'
+    }, 2),
+    new RecapCard(3)
     ];
 
-    this.isAdCard = function (card){
+    this.isAdCard = function(card) {
         return (card instanceof AdCard);
-    }
+    };
 
     this.getCard = function(cardNum) {
-        var card = this.cards[cardNum];
-        if (this.isAdCard(card)){
+        var card = self.cards[cardNum];
+        if (self.isAdCard(card)) {
             return this.getAdCard();
-         } else {
-             return browser.findElements({ css: 'ul.slides__list>li' })
-                 .then(function(lis) {
-                     return lis[card.index];
-                 });
+        } else {
+            return browser.findElements({
+                css: 'ul.cards__list>li'
+            })
+            .then(function(lis) {
+                return lis[card.index];
+            });
         }
     };
 
     this.getAdCard = function() {
-        return browser.findElements({ css: 'ul.slides__list>li' })
-            .then(function(lis) {
-                return lis[4];
-            });
-    }
+        return browser.findElements({
+            css: 'ul.cards__list>li'
+        })
+        .then(function(lis) {
+            return lis[4];
+        });
+    };
 
     this.get = function() {
-        splash.get();
-        splash.click();
-        return browser.findElement({ css: '.' + splash.className })
-            .then(function(element) {
-                return element.findElement({ tagName: 'iframe' });
-            })
-            .then(function(iframe) {
-                return browser.switchTo().frame(iframe);
+        return splash.get()
+        .then(function() {
+            return splash.click();
+        })
+        .then(function() {
+            return browser.findElement({
+                css: '.' + splash.className
             });
+        })
+        .then(function(element) {
+            return element.findElement({
+                tagName: 'iframe'
+            });
+        })
+        .then(function(iframe) {
+            return browser.switchTo().frame(iframe);
+        });
     };
+
+    this.waitForAd = function() {
+        return browser.wait(function() {
+            return browser.findElement({
+                css: 'div.adSkip__group'
+            })
+            .then(function(adSkip) {
+                return adSkip.isDisplayed();
+            })
+            .then(function(isDisplayed) {
+                return !isDisplayed;
+            });
+        }, 15000);
+    };
+
 };

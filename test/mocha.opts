@@ -1,4 +1,5 @@
 --reporter mocha-jenkins-reporter
---timeout 120000
+--timeout 60000
 --recursive
---slow 1000
+--slow 2000
+--ui mocha-retry

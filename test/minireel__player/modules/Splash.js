@@ -15,7 +15,9 @@ module.exports = function(browser) {
 
     this.iframe = {
         get: function() {
-            return browser.findElement({ css: this.selector });
+            return browser.findElement({
+                css: this.selector
+            });
         }
     };
     Object.defineProperties(this.iframe, {
@@ -30,44 +32,55 @@ module.exports = function(browser) {
         var className = this.className;
 
         return browser.wait(function() {
-            return browser.findElement({ css: '.' + className })
-                .then(function(element) {
-                    return element.isDisplayed();
-                });
+            return browser.findElement({
+                css: '.' + className
+            })
+            .then(function(element) {
+                return element.isDisplayed();
+            });
         });
     };
 
     this.click = function() {
         var className = this.className;
 
-        return browser.findElement({ css: '.' + className })
-            .then(function click(element) {
-                browser.actions()
-                    .mouseDown(element)
-                    .mouseUp()
-                    .perform();
-                return webdriver.promise.fulfilled(element);
-            })
-            .then(function waitForIframe(element) {
-                return browser.wait(function() {
-                    return element.findElement({ tagName: 'iframe' })
-                        .then(function(iframe) {
-                            return iframe.isDisplayed();
-                        });
-                }, 10000);
-            });
+        return browser.findElement({
+            css: '.' + className
+        })
+        .then(function click(element) {
+            browser.actions()
+            .mouseDown(element)
+            .mouseUp()
+            .perform();
+            return webdriver.promise.fulfilled(element);
+        })
+        .then(function waitForIframe(element) {
+            return browser.wait(function() {
+                return element.findElement({
+                    tagName: 'iframe'
+                })
+                .then(function(iframe) {
+                    return iframe.isDisplayed();
+                })
+                .thenCatch(function() {
+                    return false;
+                });
+            }, 10000);
+        });
     };
 
     this.mouseOver = function() {
         var className = this.className;
 
-        return browser.findElement({ css: '.' + className })
-            .then(function click(element) {
-                browser.actions()
-                    .mouseMove(element)
-                    .perform();
-                return webdriver.promise.fulfilled(element);
-            });
+        return browser.findElement({
+            css: '.' + className
+        })
+        .then(function click(element) {
+            browser.actions()
+            .mouseMove(element)
+            .perform();
+            return webdriver.promise.fulfilled(element);
+        });
     };
 
 };
